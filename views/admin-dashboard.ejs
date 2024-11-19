@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= adminName %> Dashboard</title>
+    <!-- Tailwind CSS -->
+    <link href="/css/output.css" rel="stylesheet">
+    <!-- Tailwind CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- REMIX-ICON -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.css">
+</head>
+
+<body class="bg-gray-50">
+
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-blue-700 text-white p-6 shadow-lg">
+            <h2 class="text-2xl font-bold mb-6 text-center"><%= adminName %> Dashboard</h2>
+            <ul>
+                <li class="mb-4">
+                    <a href="#" class="text-white hover:text-yellow-400 transition-colors text-lg font-medium">Dashboard</a>
+                </li>
+                <li class="mb-4">
+                    <a href="/add-news" class="text-white hover:text-yellow-400 transition-colors text-lg font-medium">Add News</a>
+                </li>
+                <li class="mb-4">
+                    <a href="#" class="text-white hover:text-yellow-400 transition-colors text-lg font-medium">View News</a>
+                </li>
+                <li class="mb-4">
+                    <a href="#" class="text-white hover:text-yellow-400 transition-colors text-lg font-medium">Settings</a>
+                </li>
+                <li>
+                    <a href="#" class="text-white hover:text-yellow-400 transition-colors text-lg font-medium">Logout</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 p-8 bg-gray-50 overflow-y-auto">
+            <h1 class="text-3xl font-bold text-blue-800 mb-8">Dashboard</h1>
+
+            <!-- Statistics Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Total News</h3>
+                    <p class="text-gray-600 text-2xl font-bold">120</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Pending Approvals</h3>
+                    <p class="text-gray-600 text-2xl font-bold">5</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Expired News</h3>
+                    <p class="text-gray-600 text-2xl font-bold">10</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Total Announcements</h3>
+                    <p class="text-gray-600 text-2xl font-bold">120</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Available Scholarships</h3>
+                    <p class="text-gray-600 text-2xl font-bold">5</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Important Documents</h3>
+                    <p class="text-gray-600 text-2xl font-bold">10</p>
+                </div>
+            </div>
+
+            <!-- Recent Activity Section -->
+            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow mb-8">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Recent Activity</h2>
+                <ul class="space-y-4">
+                    <li class="border-b pb-2 text-gray-600">New article added by John Doe - 2 mins ago</li>
+                    <li class="border-b pb-2 text-gray-600">Article "New Campus Updates" approved by Admin - 1 hour ago</li>
+                    <li class="border-b pb-2 text-gray-600">Article "Sports News" expired - 3 hours ago</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

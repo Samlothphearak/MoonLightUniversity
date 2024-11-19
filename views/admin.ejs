@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.css">
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-blue-600 text-white p-6">
+            <h2 class="text-2xl font-bold mb-6">Admin Panel</h2>
+            <ul>
+                <li class="mb-4">
+                    <a href="#" class="text-white hover:text-yellow-300 transition-colors">Dashboard</a>
+                </li>
+                <li class="mb-4">
+                    <a href="/admin/add-news" class="text-white hover:text-yellow-300 transition-colors">Add News</a>
+                </li>
+                <li class="mb-4">
+                    <a href="#" class="text-white hover:text-yellow-300 transition-colors">View News</a>
+                </li>
+                <li class="mb-4">
+                    <a href="#" class="text-white hover:text-yellow-300 transition-colors">Settings</a>
+                </li>
+                <li>
+                    <a href="#" class="text-white hover:text-yellow-300 transition-colors">Logout</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 p-6">
+            <h1 class="text-3xl font-bold text-blue-600 mb-6">Dashboard</h1>
+
+            <!-- Statistics Section -->
+            <div class="grid grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Total Articles</h3>
+                    <p class="text-gray-600">120</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Pending Approvals</h3>
+                    <p class="text-gray-600">5</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Expired Articles</h3>
+                    <p class="text-gray-600">10</p>
+                </div>
+            </div>
+
+            <!-- Recent Activity Section -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Recent Activity</h2>
+                <ul>
+                    <li class="border-b py-2">New article added by John Doe - 2 mins ago</li>
+                    <li class="border-b py-2">Article "New Campus Updates" approved by Admin - 1 hour ago</li>
+                    <li class="border-b py-2">Article "Sports News" expired - 3 hours ago</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Admin</title>
+    <!-- Tailwind CSS -->
+    <link href="/css/output.css" rel="stylesheet">
+    <!-- Tailwind CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- REMIX-ICON -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.css">
+</head>
+
+<body>
+    <div class="container mx-auto px-4 py-10">
+        <h1 class="text-3xl font-bold text-blue-600 mb-6">Create New Admin</h1>
+
+        <!-- Admin creation form -->
+        <form action="/add-admin" method="POST" class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="username" name="username" class="w-full p-2 border rounded mt-1" required>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" name="password" class="w-full p-2 border rounded mt-1" required>
+            </div>
+            <div class="mb-4">
+                <label for="adminName" class="block text-sm font-medium text-gray-700">Admin Name</label>
+                <input type="text" id="adminName" name="adminName" class="w-full p-2 border rounded mt-1" required>
+            </div>
+            <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+                Add Admin
+            </button>
+        </form>
+    </div>
+</body>
+
+</html>

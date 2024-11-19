@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal University of Phnom Penh</title>
+    <!-- Tailwind CSS -->
+    <link href="/css/output.css" rel="stylesheet">
+    <!-- Tailwind CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- REMIX-ICON -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.css">
+</head>
+
+<body class="bg-gray-50 font-sans">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-600 p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Logo and Name Section -->
+            <div class="flex items-center space-x-2">
+                <!-- Logo -->
+                <img src="/images/rupp_logo.png" alt="Royal University of Phnom Penh Logo" class="h-12">
+                <!-- University Name -->
+                <div class="text-white text-2xl font-bold">
+                    Royal University of Phnom Penh
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <div>
+                <a href="/home" class="text-white px-4 py-2 hover:bg-blue-500 rounded">Home</a>
+                <a href="/about" class="text-white px-4 py-2 hover:bg-blue-500 rounded">About Us</a>
+                <a href="/admissions" class="text-white px-4 py-2 hover:bg-blue-500 rounded">Admissions</a>
+                <a href="/courses" class="text-white px-4 py-2 hover:bg-blue-500 rounded">Courses</a>
+                <a href="/contact" class="text-white px-4 py-2 hover:bg-blue-500 rounded">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-blue-700 text-white py-20 text-center">
+        <div class="container mx-auto">
+            <h1 class="text-5xl font-extrabold">Welcome to the Royal University of Phnom Penh</h1>
+            <p class="mt-4 text-xl">Excellence in Education, Innovation, and Research</p>
+            <a href="/admissions"
+                class="mt-8 inline-block bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600">Apply
+                Now</a>
+        </div>
+    </section>
+
+    <!-- University Features Section -->
+    <section class="container mx-auto py-20">
+        <div class="grid md:grid-cols-3 gap-10">
+            <!-- Feature 1 -->
+            <div class="bg-white p-8 shadow-md rounded-lg text-center">
+                <i class="ri-book-open-line text-4xl text-blue-600"></i>
+                <h3 class="text-xl font-semibold mt-4">Wide Range of Courses</h3>
+                <p class="mt-2 text-gray-600">Explore undergraduate, graduate, and professional programs in various
+                    fields.</p>
+            </div>
+            <!-- Feature 2 -->
+            <div class="bg-white p-8 shadow-md rounded-lg text-center">
+                <i class="ri-community-line text-4xl text-blue-600"></i>
+                <h3 class="text-xl font-semibold mt-4">Campus Life</h3>
+                <p class="mt-2 text-gray-600">Vibrant student life with clubs, organizations, and a welcoming
+                    environment.</p>
+            </div>
+            <!-- Feature 3 -->
+            <div class="bg-white p-8 shadow-md rounded-lg text-center">
+                <i class="ri-team-line text-4xl text-blue-600"></i>
+                <h3 class="text-xl font-semibold mt-4">World-Class Faculty</h3>
+                <p class="mt-2 text-gray-600">Learn from industry experts and experienced professors who guide you
+                    toward success.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Announcements Section -->
+    <section class="bg-gray-100 py-16">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-8">Latest Announcements</h2>
+            <div class="grid md:grid-cols-2 gap-10">
+                <!-- Announcement 1 -->
+                <div class="bg-white p-8 shadow-lg rounded-lg">
+                    <h3 class="text-xl font-semibold text-blue-600">Important Notice for Upcoming Exams</h3>
+                    <p class="mt-2 text-gray-600">The final exams will begin on December 1st, 2024. Please make sure to
+                        check the exam schedule and prepare accordingly.</p>
+                    <!-- Picture -->
+                    <img src="/images/169_2_Job Fair 2023.jpg" alt="Exams Announcement"
+                        class="mt-4 rounded-lg shadow-md">
+                    <!-- Document Link -->
+                    <div class="mt-4">
+                        <a href="/documents/exam_schedule.pdf" class="text-blue-500 underline" download>Download Exam
+                            Schedule (PDF)</a>
+                    </div>
+                </div>
+                <!-- Announcement 2 -->
+                <div class="bg-white p-8 shadow-lg rounded-lg">
+                    <h3 class="text-xl font-semibold text-blue-600">University Orientation for New Students</h3>
+                    <p class="mt-2 text-gray-600">We are hosting an orientation session for new students on November
+                        25th, 2024. Don’t miss out on this opportunity to learn about campus life!</p>
+                    <!-- Picture -->
+                    <img src="/images/170_Job Fair 2024.jpg" alt="Orientation Announcement"
+                        class="mt-4 rounded-lg shadow-md">
+                    <!-- Document Link -->
+                    <div class="mt-4">
+                        <a href="/documents/orientation_guide.pdf" class="text-blue-500 underline" download>Download
+                            Orientation Guide (PDF)</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scholarships Section -->
+    <section class="bg-blue-700 text-white py-16">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-8">Available Scholarships</h2>
+            <div class="grid md:grid-cols-2 gap-10">
+                <!-- Scholarship 1 -->
+                <div class="bg-white p-8 shadow-lg rounded-lg">
+                    <h3 class="text-xl font-semibold text-blue-600">Higher Education for ASEAN Talents (HEAT)</h3>
+                    <p class="mt-2 text-gray-600">We offer merit-based scholarships for students with outstanding
+                        academic performance. Apply by December 10th.</p>
+                    <a href="/apply-scholarship"
+                        class="mt-4 inline-block bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition">Apply
+                        Now</a>
+                </div>
+                <!-- Scholarship 2 -->
+                <div class="bg-white p-8 shadow-lg rounded-lg">
+                    <h3 class="text-xl font-semibold text-blue-600">Nankai University Scholarship</h3>
+                    <p class="mt-2 text-gray-600">Under the cooperation of Royal University of Phnom Penh (RUPP) and
+                        International Centre for Higher Education Innovation (ICHEI), ICHEI provides full scholarship
+                        for two-year master program at Nankai University in People’s Republic of China. The scholarship
+                        is sponsored by Chinese Ministry of Commerce. The program is fully conducted in English.</p>
+                    <a href="/apply-scholarship"
+                        class="mt-4 inline-block bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition">Apply
+                        Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documents Section -->
+    <section class="bg-gray-200 py-16">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-8">Important Documents</h2>
+            <div class="grid md:grid-cols-2 gap-10">
+                <!-- Document 1 -->
+                <div class="bg-white p-8 shadow-lg rounded-lg">
+                    <h3 class="text-xl font-semibold text-blue-600">University Policy Manual</h3>
+                    <p class="mt-2 text-gray-600">Download the official university policy manual for rules and
+                        regulations.</p>
+                    <a href="/documents/university_policy.pdf"
+                        class="mt-4 inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition"
+                        download>Download (PDF)</a>
+                </div>
+                <!-- Document 2 -->
+                <div class="bg-white p-8 shadow-lg rounded-lg">
+                    <h3 class="text-xl font-semibold text-blue-600">Course Catalog</h3>
+                    <p class="mt-2 text-gray-600">Explore the list of available courses for the upcoming semester.</p>
+                    <a href="/documents/course_catalog.pdf"
+                        class="mt-4 inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition"
+                        download>Download (PDF)</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pictures Section -->
+    <section class="bg-white py-16">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-8">Campus Life Photos</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Picture 1 -->
+                <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+                    <img src="https://img.freepik.com/free-photo/male-female-students-wear-face-chill-stand-front-university_1150-24690.jpg?t=st=1732000164~exp=1732003764~hmac=935743469b6c7e901408d6a6d1cb6babd020055c25e779182e1bc871b9ab1009&w=740"
+                        alt="Campus Photo 1" class="rounded-lg w-full">
+                </div>
+                <!-- Picture 2 -->
+                <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+                    <img src="https://img.freepik.com/free-photo/male-female-students-wear-face-chill-stand-front-university_1150-24695.jpg?ga=GA1.1.151523532.1731996135&semt=ais_hybrid"
+                        alt="Campus Photo 2" class="rounded-lg w-full">
+                </div>
+                <!-- Picture 3 -->
+                <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+                    <img src="https://img.freepik.com/free-photo/group-friends-taking-selfie-urban-street-having-good-fun-together_1150-4582.jpg?ga=GA1.1.151523532.1731996135&semt=ais_hybrid"
+                        alt="Campus Photo 3" class="rounded-lg w-full">
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Testimonials Section -->
+    <section class="bg-gray-100 py-16">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-8">What Our Students Say</h2>
+            <div class="flex flex-wrap justify-center gap-10">
+                <!-- Testimonial 1 -->
+                <div class="bg-white p-8 shadow-lg rounded-lg max-w-xs">
+                    <p class="text-gray-600 italic">"RUPP has helped me discover my passion and reach my career goals.
+                        The professors and peers are amazing!"</p>
+                    <p class="mt-4 font-semibold">John Doe</p>
+                    <p class="text-gray-500">Computer Science Graduate</p>
+                </div>
+                <!-- Testimonial 2 -->
+                <div class="bg-white p-8 shadow-lg rounded-lg max-w-xs">
+                    <p class="text-gray-600 italic">"The campus is full of opportunities for personal and academic
+                        growth. I'm proud to be a part of this community."</p>
+                    <p class="mt-4 font-semibold">Jane Smith</p>
+                    <p class="text-gray-500">Engineering Student</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview of University Section -->
+    <section class="bg-blue-100 py-16">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold text-blue-600 mb-8">Overview of Our University</h2>
+            <div class="grid md:grid-cols-2 gap-16">
+                <!-- University Overview Text -->
+                <div class="text-left">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">About Us</h3>
+                    <p class="text-gray-600 mb-4">The Royal University of Phnom Penh (RUPP) is Cambodia's leading
+                        institution of higher learning. It was founded in 1960 with a vision to promote academic
+                        excellence, research, and innovation. The university is committed to providing quality education
+                        that is globally recognized and fostering a collaborative and inclusive environment.</p>
+
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Mission & Vision</h3>
+                    <p class="text-gray-600 mb-4">Our mission is to produce leaders who can contribute to the
+                        socioeconomic development of Cambodia. Our vision is to be a globally recognized university
+                        committed to research, innovation, and community service.</p>
+
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Core Values</h3>
+                    <ul class="list-disc pl-6 text-gray-600">
+                        <li>Academic Excellence</li>
+                        <li>Integrity and Ethics</li>
+                        <li>Social Responsibility</li>
+                        <li>Global Engagement</li>
+                        <li>Innovation and Research</li>
+                    </ul>
+                </div>
+
+                <!-- University Overview Image -->
+                <div>
+                    <img src="https://img.freepik.com/free-photo/businesswomen-discussing-paperwork-together-against-railing-business-people-concept_1150-2374.jpg?t=st=1732000052~exp=1732003652~hmac=a521b57314a175902413c60d7d5f8a79f58ef1ec836676289660b5dbef7e31ea&w=740"
+                        alt="University Building" class="rounded-lg shadow-md w-full">
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- University News Section -->
+    <section class="bg-white py-16">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold text-blue-600 mb-8">University News</h2>
+
+            <!-- Check if there are any news articles -->
+            <% if (newsArticles.length> 0) { %>
+                <div class="grid md:grid-cols-3 gap-16">
+                    <% newsArticles.forEach(article=> { %>
+                        <!-- Dynamic News Item -->
+                        <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                            <img src="<%= article.imageUrl %>" alt="News Image"
+                                class="rounded-lg mb-4 w-full h-48 object-cover">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                                <%= article.title %>
+                            </h3>
+                            <p class="text-gray-600 mb-4">
+                                <%= article.description.slice(0, 100) %>...
+                            </p>
+
+                            <!-- Countdown Timer (Only show if expiredAt exists) -->
+                            <% if (article.expiredAt) { %>
+                                <div id="countdown-<%= article._id %>" class="text-gray-600 font-semibold mt-4">
+                                    <p>Expires in: <span id="countdown-timer-<%= article._id %>"></span></p>
+                                </div>
+                                <% } %>
+
+                                    <a href="#" class="text-blue-600 font-semibold hover:underline">Read more</a>
+                        </div>
+
+                        <script>
+                        // Countdown logic (only for articles with expiration date)
+                        <% if (article.expiredAt) { %>
+                            const expiredAt = new Date("<%= article.expiredAt %>").getTime();
+                                const countdownElement = document.getElementById("countdown-timer-<%= article._id %>");
+
+                                function updateCountdown() {
+                                    const now = new Date().getTime();
+                                    const timeLeft = expiredAt - now;
+
+                                    if (timeLeft <= 0) {
+                                        countdownElement.innerHTML = "Expired";
+                                    } else {
+                                        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                                        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                                        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                                        countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                                    }
+                                }
+
+                                setInterval(updateCountdown, 1000); // Update the countdown every second
+                        <% } %>
+                        </script>
+                        <% }); %>
+                </div>
+                <% } else { %>
+                    <p class="text-gray-600">No news available at the moment. Check back later!</p>
+                    <% } %>
+        </div>
+    </section>
+
+
+
+
+    <!-- Footer Section -->
+    <footer class="bg-blue-600 text-white py-10">
+        <div class="container mx-auto text-center">
+            <!-- Footer Text -->
+            <p class="text-lg mb-4">&copy; 2024 Royal University of Phnom Penh. All Rights Reserved.</p>
+            <p class="text-sm mb-6">Designed with passion for future generations of students.</p>
+
+            <!-- Footer Links -->
+            <div class="space-x-6 mb-6">
+                <a href="/add-news" class="text-white hover:text-yellow-300 transition-colors">Add News</a>
+                <a href="/admin" class="text-white hover:text-yellow-300 transition-colors">Admin</a>
+            </div>
+
+            <!-- Social Media Links (Example) -->
+            <div class="space-x-6">
+                <a href="#" class="text-white hover:text-yellow-300 transition-colors">
+                    <i class="ri-facebook-fill text-2xl"></i>
+                </a>
+                <a href="#" class="text-white hover:text-yellow-300 transition-colors">
+                    <i class="ri-twitter-fill text-2xl"></i>
+                </a>
+                <a href="#" class="text-white hover:text-yellow-300 transition-colors">
+                    <i class="ri-instagram-fill text-2xl"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+
+</body>
+
+</html>

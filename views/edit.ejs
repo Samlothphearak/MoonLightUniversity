@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student</title>
+    <link href="/css/output.css" rel="stylesheet">
+     <!-- Tailwind CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- REMIX-ICON -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.css">
+
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto mt-10 px-4">
+        <h1 class="text-3xl font-bold text-center mb-5">Edit Student</h1>
+        <form action="/edit-student/<%= student._id %>" method="POST"
+            class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
+            <div class="mb-4">
+                <label for="name" class="block text-gray-700 font-bold">Name</label>
+                <input type="text" name="name" id="name" value="<%= student.name %>"
+                    class="w-full mt-2 p-2 border rounded" required>
+            </div>
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 font-bold">Email</label>
+                <input type="email" name="email" id="email" value="<%= student.email %>"
+                    class="w-full mt-2 p-2 border rounded" required>
+            </div>
+            <div class="mb-4">
+                <label for="department" class="block text-gray-700 font-bold">Department</label>
+                <input type="text" name="department" id="department" value="<%= student.department %>"
+                    class="w-full mt-2 p-2 border rounded" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                Update Student
+            </button>
+        </form>
+    </div>
+</body>
+
+</html>

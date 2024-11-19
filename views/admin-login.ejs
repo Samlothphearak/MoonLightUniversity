@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <!-- Tailwind CSS -->
+    <link href="/css/output.css" rel="stylesheet">
+    <!-- Tailwind CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- REMIX-ICON -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.css">
+</head>
+
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+
+    <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-xl mt-10 space-y-6">
+        <h2 class="text-3xl font-bold text-center text-blue-600 mb-6">Admin Login</h2>
+
+        <!-- Error Message -->
+        <% if (errorMessage) { %>
+        <div class="bg-red-100 text-red-700 p-4 rounded-lg mb-6">
+            <%= errorMessage %>
+        </div>
+        <% } %>
+
+        <!-- Form for Admin Login -->
+        <form action="/admin-login" method="POST" class="space-y-4">
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="username" name="username" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" name="password" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">
+                Login
+            </button>
+        </form>
+
+        <!-- Link to create new admin -->
+        <div class="text-center">
+            <a href="/contact" class="text-blue-600 hover:text-blue-800 font-medium text-sm">Contact Center</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

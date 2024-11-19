@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student - Royal University of Phnom Penh</title>
+    <!-- Tailwind CSS -->
+    <link href="/css/output.css" rel="stylesheet">
+    <!-- Tailwind CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-50 font-sans">
+    <div class="container mx-auto mt-10 px-4">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-blue-600">Add a New Student</h1>
+        </header>
+
+        <!-- Add Student Form -->
+        <section class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
+            <form action="/add-student" method="POST" class="space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                    <input type="text" name="name" id="name"
+                        class="w-full mt-2 p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Enter student name" required>
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" name="email" id="email"
+                        class="w-full mt-2 p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Enter student email" required>
+                </div>
+                <div>
+                    <label for="department" class="block text-sm font-medium text-gray-700">Department</label>
+                    <input type="text" name="department" id="department"
+                        class="w-full mt-2 p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Enter department name" required>
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition">
+                    Add Student
+                </button>
+            </form>
+        </section>
+
+        <footer class="text-center mt-10">
+            <a href="/index" class="text-blue-600">Back to Student List</a>
+        </footer>
+    </div>
+</body>
+
+</html>
