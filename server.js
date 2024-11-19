@@ -334,6 +334,15 @@ app.get('/contact', (req, res) => {
 
 //   res.render('contact', { successMessage: 'Thank you for contacting us! We will get back to you soon.' });
 // });
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+      if (err) {
+          console.error(err);
+          return res.redirect('/admin');
+      }
+      res.redirect('/admin-login'); // Redirect to login page after logout
+  });
+});
 // Start Server
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)

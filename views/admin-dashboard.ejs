@@ -16,32 +16,55 @@
 <body class="bg-gray-50">
 
     <div class="flex h-screen">
-        <!-- Sidebar -->
-        <div class="w-64 bg-blue-700 text-white p-6 shadow-lg">
-            <h2 class="text-2xl font-bold mb-6 text-center"><%= adminName %> Dashboard</h2>
-            <ul>
-                <li class="mb-4">
-                    <a href="#" class="text-white hover:text-yellow-400 transition-colors text-lg font-medium">Dashboard</a>
-                </li>
-                <li class="mb-4">
-                    <a href="#" class="text-white hover:text-yellow-400 transition-colors text-lg font-medium">Announcement</a>
-                </li>
-                <li class="mb-4">
-                    <a href="#" class="text-white hover:text-yellow-400 transition-colors text-lg font-medium">Scholarship</a>
-                </li>
-                <li class="mb-4">
-                    <a href="/add-news" class="text-white hover:text-yellow-400 transition-colors text-lg font-medium">News</a>
-                </li>
-                <li class="mb-4">
-                    <a href="#" class="text-white hover:text-yellow-400 transition-colors text-lg font-medium">View News</a>
-                </li>
-                <li class="mb-4">
-                    <a href="#" class="text-white hover:text-yellow-400 transition-colors text-lg font-medium">Settings</a>
-                </li>
-                <li>
-                    <a href="#" class="text-white hover:text-yellow-400 transition-colors text-lg font-medium">Logout</a>
-                </li>
-            </ul>
+         <!-- Sidebar -->
+         <div class="w-64 bg-blue-700 text-white p-6 shadow-lg flex flex-col justify-between">
+            <div>
+                <h2 class="text-2xl font-bold mb-6 text-center"><%= adminName %> Dashboard</h2>
+                <ul>
+                    <li class="mb-4">
+                        <a href="/admin"
+                            class="flex items-center text-white hover:text-yellow-400 transition-colors text-lg font-medium">
+                            <i class="ri-dashboard-line mr-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="/announcements"
+                            class="flex items-center text-white hover:text-yellow-400 transition-colors text-lg font-medium">
+                            <i class="ri-megaphone-line mr-2"></i> Announcement
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="/scholarships"
+                            class="flex items-center text-white hover:text-yellow-400 transition-colors text-lg font-medium">
+                            <i class="ri-booklet-line mr-2"></i> Scholarship
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="/add-news"
+                            class="flex items-center text-white hover:text-yellow-400 transition-colors text-lg font-medium">
+                            <i class="ri-file-add-line mr-2"></i> Add News
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="/news"
+                            class="flex items-center text-white hover:text-yellow-400 transition-colors text-lg font-medium">
+                            <i class="ri-file-list-line mr-2"></i> View News
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="/settings"
+                            class="flex items-center text-white hover:text-yellow-400 transition-colors text-lg font-medium">
+                            <i class="ri-settings-3-line mr-2"></i> Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <a href="/logout"
+                    class="flex items-center text-white hover:text-yellow-400 transition-colors text-lg font-medium">
+                    <i class="ri-logout-box-r-line mr-2"></i> Logout
+                </a>
+            </div>
         </div>
 
         <!-- Main Content Area -->
