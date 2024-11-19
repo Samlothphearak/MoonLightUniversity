@@ -77,6 +77,72 @@
         </div>
     </section>
 
+<!-- University News Section -->
+<section class="bg-white py-16">
+    <div class="container mx-auto text-center">
+        <h2 class="text-3xl font-bold text-blue-600 mb-8">University News</h2>
+
+        <!-- Check if there are any news articles -->
+        <% if (newsArticles.length > 0) { %>
+            <div class="grid md:grid-cols-3 gap-16">
+                <% newsArticles.forEach(article => { %>
+                    <!-- Dynamic News Item -->
+                    <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                        <!-- Image with object-cover to ensure proper fit and cropping -->
+                        <img src="<%= article.imageUrl %>" alt="News Image"
+                             class="rounded-lg mb-4 w-full h-100 object-cover">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                            <%= article.title %>
+                        </h3>
+                        <p class="text-gray-600 mb-4">
+                            <%= article.description.slice(0, 100) %>...
+                        </p>
+
+                        <!-- Countdown Timer (Only show if expiredAt exists) -->
+                        <% if (article.expiredAt) { %>
+                            <div id="countdown-<%= article._id %>" class="text-gray-600 font-semibold mt-4">
+                                <p>Expires in: <span id="countdown-timer-<%= article._id %>"></span></p>
+                            </div>
+                        <% } %>
+
+                        <a href="#" class="text-blue-600 font-semibold hover:underline">Read more</a>
+                    </div>
+
+                    <script>
+                        // Countdown logic (only for articles with expiration date)
+                        <% if (article.expiredAt) { %>
+                            const expiredAt = new Date("<%= article.expiredAt %>").getTime();
+                            const countdownElement = document.getElementById("countdown-timer-<%= article._id %>");
+
+                            function updateCountdown() {
+                                const now = new Date().getTime();
+                                const timeLeft = expiredAt - now;
+
+                                if (timeLeft <= 0) {
+                                    countdownElement.innerHTML = "Expired";
+                                } else {
+                                    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                                    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                                    countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                                }
+                            }
+
+                            setInterval(updateCountdown, 1000); // Update the countdown every second
+                        <% } %>
+                    </script>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p class="text-gray-600">No news available at the moment. Check back later!</p>
+        <% } %>
+    </div>
+</section>
+
+
+
     <!-- Announcements Section -->
     <section class="bg-gray-100 py-16">
         <div class="container mx-auto text-center">
@@ -253,74 +319,6 @@
             </div>
         </div>
     </section>
-
-
-    <!-- University News Section -->
-    <section class="bg-white py-16">
-        <div class="container mx-auto text-center">
-            <h2 class="text-3xl font-bold text-blue-600 mb-8">University News</h2>
-
-            <!-- Check if there are any news articles -->
-            <% if (newsArticles.length> 0) { %>
-                <div class="grid md:grid-cols-3 gap-16">
-                    <% newsArticles.forEach(article=> { %>
-                        <!-- Dynamic News Item -->
-                        <div class="bg-gray-100 p-6 rounded-lg shadow-md">
-                            <img src="<%= article.imageUrl %>" alt="News Image"
-                                class="rounded-lg mb-4 w-full h-48 object-cover">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-2">
-                                <%= article.title %>
-                            </h3>
-                            <p class="text-gray-600 mb-4">
-                                <%= article.description.slice(0, 100) %>...
-                            </p>
-
-                            <!-- Countdown Timer (Only show if expiredAt exists) -->
-                            <% if (article.expiredAt) { %>
-                                <div id="countdown-<%= article._id %>" class="text-gray-600 font-semibold mt-4">
-                                    <p>Expires in: <span id="countdown-timer-<%= article._id %>"></span></p>
-                                </div>
-                                <% } %>
-
-                                    <a href="#" class="text-blue-600 font-semibold hover:underline">Read more</a>
-                        </div>
-
-                        <script>
-                        // Countdown logic (only for articles with expiration date)
-                        <% if (article.expiredAt) { %>
-                            const expiredAt = new Date("<%= article.expiredAt %>").getTime();
-                                const countdownElement = document.getElementById("countdown-timer-<%= article._id %>");
-
-                                function updateCountdown() {
-                                    const now = new Date().getTime();
-                                    const timeLeft = expiredAt - now;
-
-                                    if (timeLeft <= 0) {
-                                        countdownElement.innerHTML = "Expired";
-                                    } else {
-                                        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                                        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                                        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                                        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-                                        countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-                                    }
-                                }
-
-                                setInterval(updateCountdown, 1000); // Update the countdown every second
-                        <% } %>
-                        </script>
-                        <% }); %>
-                </div>
-                <% } else { %>
-                    <p class="text-gray-600">No news available at the moment. Check back later!</p>
-                    <% } %>
-        </div>
-    </section>
-
-
-
-
     <!-- Footer Section -->
     <footer class="bg-blue-600 text-white py-10">
         <div class="container mx-auto text-center">

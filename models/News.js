@@ -1,4 +1,4 @@
-const mongoose = require('mongoose'); // Add this line to require mongoose
+const mongoose = require('mongoose');
 
 const newsSchema = new mongoose.Schema({
     title: {
@@ -24,15 +24,16 @@ const newsSchema = new mongoose.Schema({
     },
     expiredAt: {
         type: Date,
-        required: false, // Expiration date is optional
-    },
-    status: {
-        type: String,
-        enum: ['pending', 'approved', 'expired'],
-        default: 'pending',
+        required: false, 
+        validate: {
+            validator: function(value) {
+                return !value || value > Date.now(); // Ensure expiration date is in the future
+            },
+            message: 'Expiration date must be in the future',
+        },
     },
 }, {
-    timestamps: true, // Add createdAt and updatedAt fields automatically
+    timestamps: true, // Automatically adds createdAt and updatedAt fields
 });
 
-module.exports = mongoose.model('News', newsSchema); // Export the model
+module.exports = mongoose.model('News', newsSchema);
