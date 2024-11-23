@@ -2,11 +2,15 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const News = require("./models/News");
-const Admin = require('./models/Admin'); // Adjust the path if needed
+const Admin = require("./models/Admin");
+const Student = require("./models/Student");
+const Notification = require("./models/Notification"); // Adjust the path as needed
+const Course = require("./models/Course"); // Your course model
+const Schedule = require("./models/Schedule");
 const multer = require("multer");
 const path = require("path");
-const session = require('express-session');
-const nodemailer = require('nodemailer');
+const session = require("express-session");
+const nodemailer = require("nodemailer");
 require("dotenv").config();
 
 const app = express();
@@ -34,11 +38,13 @@ const fileFilter = (req, file, cb) => {
 };
 
 // Set up session middleware
-app.use(session({
-    secret: 'your-secret-key',
+app.use(
+  session({
+    secret: "your-secret-key",
     resave: false,
     saveUninitialized: true,
-  }));
+  })
+);
 
 // Set up multer middleware
 const upload = multer({
@@ -63,28 +69,6 @@ mongoose
   })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("Error connecting to MongoDB:", err));
-
-// MongoDB Schema & Model
-const studentSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    match: [/.+@.+\..+/, "Invalid email format"], // Basic email validation
-  },
-  department: {
-    type: String,
-    required: true,
-  },
-});
-
-const Student = mongoose.model("Student", studentSchema);
-
 // Route for rendering the main university page
 app.get("/", async (req, res) => {
   try {
@@ -118,38 +102,85 @@ app.get("/index", async (req, res) => {
 });
 
 // GET Add Student Page
-app.get('/add-student', (req, res) => {
-  const departments = ['Computer Science', 'Mathematics', 'Physics', 'Biology'];
-  res.render('add-student', { departments, error: null });
+// Route to display the form (GET)
+app.get("/add-student", (req, res) => {
+  res.render("add-student", { error: null, success: null });
 });
 
-// POST Add Student Form
-app.post('/add-student', (req, res) => {
-  const { name, email, department } = req.body;
+// Route to handle form submission (POST)
+app.post("/add-student", upload.single("photo"), async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    address,
+    dateOfBirth,
+    placeOfBirth,
+  } = req.body;
+  const photo = req.file ? req.file.path : null;
 
-  if (!name || !email || !department) {
-      return res.render('add-student', { 
-          departments: ['Computer Science', 'Mathematics', 'Physics', 'Biology'],
-          error: 'All fields are required!'
-      });
+  // Validate form fields
+  if (
+    !firstName ||
+    !lastName ||
+    !email ||
+    !phone ||
+    !address ||
+    !dateOfBirth ||
+    !placeOfBirth ||
+    !photo
+  ) {
+    return res.render("add-student", {
+      error: "All fields are required!",
+      success: null,
+    });
   }
 
-  // Save student to database (MongoDB)
-  const newStudent = new Student({ name, email, department });
-  newStudent.save()
-      .then(() => res.redirect('/students'))
-      .catch(err => res.render('add-student', { 
-          departments: ['Computer Science', 'Mathematics', 'Physics', 'Biology'],
-          error: 'Failed to save student. Please try again.' 
-      }));
-});
+  // Validate phone number (e.g., must be 9 digits for Cambodia)
+  const phoneRegex = /^[0-9]{9}$/; // Adjust the pattern as needed for your case
+  if (!phoneRegex.test(phone)) {
+    return res.render("add-student", {
+      error: "Phone number must be 9 digits.",
+      success: null,
+    });
+  }
 
+  // Create a new student document
+  try {
+    const student = new Student({
+      firstName,
+      lastName,
+      email,
+      phone,
+      address,
+      photo,
+      dateOfBirth,
+      placeOfBirth,
+    });
+
+    // Save the student document to the database
+    await student.save();
+
+    // Render the form with a success message
+    res.render("add-student", {
+      error: null,
+      success: "Student added successfully!",
+    });
+  } catch (err) {
+    console.error(err);
+    res.render("add-student", {
+      error: "Error adding student. Please try again.",
+      success: null,
+    });
+  }
+});
 
 // Delete Student
 app.post("/delete-student/:id", async (req, res) => {
   try {
     await Student.findByIdAndDelete(req.params.id);
-    res.redirect("/");
+    res.redirect("/smsd");
   } catch (err) {
     res.status(500).send("Error deleting student");
   }
@@ -185,7 +216,7 @@ app.get("/add-news", (req, res) => {
   if (req.session.isAuthenticated) {
     // Render the add-news page with the admin's name from the session
     res.render("add-news", {
-      adminName: req.session.adminName,  // Add adminName from session
+      adminName: req.session.adminName, // Add adminName from session
       successMessage: null,
       errorMessage: null,
     });
@@ -194,7 +225,6 @@ app.get("/add-news", (req, res) => {
     res.redirect("/admin-login");
   }
 });
-
 
 app.post("/news/add", upload.single("imageFile"), async (req, res) => {
   const { title, description, imageUrl, author, date, expiredAt } = req.body;
@@ -227,105 +257,109 @@ app.post("/news/add", upload.single("imageFile"), async (req, res) => {
 
 // ===============Admin login page================== (GET)
 // Admin login route (GET)
-app.get('/admin-login', (req, res) => {
-    res.render('admin-login', { errorMessage: null });
+app.get("/admin-login", (req, res) => {
+  res.render("admin-login", { errorMessage: null });
 });
 
 // Admin login form submission (POST)
-app.post('/admin-login', async (req, res) => {
+app.post("/admin-login", async (req, res) => {
   const { username, password } = req.body;
 
   // Find admin by username
   const admin = await Admin.findOne({ username });
   if (!admin) {
-      return res.render('admin-login', { errorMessage: 'Invalid username or password' });
+    return res.render("admin-login", {
+      errorMessage: "Invalid username or password",
+    });
   }
 
   // Compare the entered password with the stored password
   const isMatch = await admin.comparePassword(password);
   if (!isMatch) {
-      return res.render('admin-login', { errorMessage: 'Invalid username or password' });
+    return res.render("admin-login", {
+      errorMessage: "Invalid username or password",
+    });
   }
 
   // Store the admin in the session after successful login
   req.session.isAuthenticated = true;
-  req.session.adminName = admin.adminName;  // Store admin name in session
+  req.session.adminName = admin.adminName; // Store admin name in session
 
   // Redirect to the admin dashboard
-  res.redirect('/admin');
+  res.redirect("/admin");
 });
 
 // Admin dashboard route (GET)
-app.get('/admin', (req, res) => {
-    if (req.session.isAuthenticated) {
-        res.render('admin-dashboard', { adminName: req.session.adminName });
-    } else {
-        res.redirect('/admin-login');
-    }
+app.get("/admin", (req, res) => {
+  if (req.session.isAuthenticated) {
+    res.render("admin-dashboard", { adminName: req.session.adminName });
+  } else {
+    res.redirect("/admin-login");
+  }
 });
 
 // Add Admin Route (POST)
-app.post('/add-admin', async (req, res) => {
-    const { username, password, adminName } = req.body;
+app.post("/add-admin", async (req, res) => {
+  const { username, password, adminName } = req.body;
 
-    // Check if the admin already exists
-    const existingAdmin = await Admin.findOne({ username });
-    if (existingAdmin) {
-        return res.status(400).send('Admin with that username already exists!');
-    }
+  // Check if the admin already exists
+  const existingAdmin = await Admin.findOne({ username });
+  if (existingAdmin) {
+    return res.status(400).send("Admin with that username already exists!");
+  }
 
-    try {
-        const newAdmin = new Admin({
-            username,
-            password,
-            adminName,
-        });
+  try {
+    const newAdmin = new Admin({
+      username,
+      password,
+      adminName,
+    });
 
-        await newAdmin.save();
-        res.status(201).send('Admin created successfully!');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error creating admin.');
-    }
+    await newAdmin.save();
+    res.status(201).send("Admin created successfully!");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error creating admin.");
+  }
 });
 // Admin creation form (GET)
-app.get('/add-admin', (req, res) => {
-  res.render('add-admin');
+app.get("/add-admin", (req, res) => {
+  res.render("add-admin");
 });
 
 // ===============Admin dashboard route (GET)====================
 // Admin dashboard route (GET)
-app.get('/admin', async (req, res) => {
+app.get("/admin", async (req, res) => {
   if (req.session.isAuthenticated) {
-      try {
-          // Fetch data from the database
-          const totalArticles = await News.countDocuments();
-          const pendingApprovals = await News.countDocuments({ status: 'pending' });
-          const expiredArticles = await News.countDocuments({ status: 'expired' });
+    try {
+      // Fetch data from the database
+      const totalArticles = await News.countDocuments();
+      const pendingApprovals = await News.countDocuments({ status: "pending" });
+      const expiredArticles = await News.countDocuments({ status: "expired" });
 
-          // Fetch recent activity (last 5 added news articles)
-          const recentActivity = await News.find().sort({ createdAt: -1 }).limit(5);
+      // Fetch recent activity (last 5 added news articles)
+      const recentActivity = await News.find().sort({ createdAt: -1 }).limit(5);
 
-          // Render the dashboard with data
-          res.render('admin-dashboard', {
-              adminName: req.session.adminName,  // Pass the admin's name
-              totalArticles,                  // Pass the variable for total articles
-              pendingApprovals,               // Pass the variable for pending approvals
-              expiredArticles,               // Pass the variable for expired articles
-              recentActivity,                // Pass the variable for recent activity
-          });
-      } catch (error) {
-          console.error('Error fetching dashboard data:', error);
-          res.status(500).send('Error fetching dashboard data');
-      }
+      // Render the dashboard with data
+      res.render("admin-dashboard", {
+        adminName: req.session.adminName, // Pass the admin's name
+        totalArticles, // Pass the variable for total articles
+        pendingApprovals, // Pass the variable for pending approvals
+        expiredArticles, // Pass the variable for expired articles
+        recentActivity, // Pass the variable for recent activity
+      });
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+      res.status(500).send("Error fetching dashboard data");
+    }
   } else {
-      res.redirect('/admin-login'); // Redirect to login page if not authenticated
+    res.redirect("/admin-login"); // Redirect to login page if not authenticated
   }
 });
 
 // ==================Route to render the "Contact Us" form (GET)===================
-app.get('/contact', (req, res) => {
-  res.render('contact'); // Renders the 'contact.ejs' file
+app.get("/contact", (req, res) => {
+  res.render("contact"); // Renders the 'contact.ejs' file
 });
 
 // // Route to handle the form submission (POST)
@@ -344,21 +378,33 @@ app.get('/contact', (req, res) => {
 //   res.render('contact', { successMessage: 'Thank you for contacting us! We will get back to you soon.' });
 // });
 //===========================
-app.get('/smsd', async (req, res) => {
+app.get("/smsd", async (req, res) => {
   const students = await Student.find(); // Fetch students from MongoDB
-  res.render('smsd', { students });
+  res.render("smsd", { students });
 });
-//===========================
-app.get('/logout', (req, res) => {
-  req.session.destroy(err => {
-      if (err) {
-          console.error(err);
-          return res.redirect('/admin');
-      }
-      res.redirect('/admin-login'); // Redirect to login page after logout
+//=========== LogOut================
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error(err);
+      return res.redirect("/admin");
+    }
+    res.redirect("/admin-login"); // Redirect to login page after logout
   });
 });
-// Start Server
+//============= student-dashboard ================================
+app.get("/student-dashboard", async (req, res) => {
+  try {
+    const students = await Student.find(); // Fetch students from MongoDB
+    res.render("student-dashboard", { students }); // Make sure there is no extra space in 'student-dashboard'
+  } catch (error) {
+    console.error("Error fetching student data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+//==================Edit-profile==============================================
+
+// ==============Start Server===========================
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)
 );

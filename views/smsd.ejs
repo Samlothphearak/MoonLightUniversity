@@ -98,8 +98,6 @@
                 </div>
             </section>
 
-            <!-- Table Section -->
-            <!-- Table Section -->
             <section class="mt-8">
                 <h3 class="text-xl font-semibold mb-4">Recent Students</h3>
                 <div class="bg-white rounded-lg shadow overflow-x-auto">
@@ -107,8 +105,8 @@
                         <thead class="bg-gray-100">
                             <tr>
                                 <th class="px-6 py-2 text-left text-sm font-medium text-gray-700">Name</th>
-                                <th class="px-6 py-2 text-left text-sm font-medium text-gray-700">Grade</th>
-                                <th class="px-6 py-2 text-left text-sm font-medium text-gray-700">Enrolled Date</th>
+                                <th class="px-6 py-2 text-left text-sm font-medium text-gray-700">Phone</th>
+                                <th class="px-6 py-2 text-left text-sm font-medium text-gray-700">Date of Birth</th>
                                 <th class="px-6 py-2 text-left text-sm font-medium text-gray-700">Actions</th>
                             </tr>
                         </thead>
@@ -116,13 +114,14 @@
                             <% students.forEach(student=> { %>
                                 <tr class="border-b">
                                     <td class="px-6 py-2">
-                                        <%= student.name %>
+                                        <%= student.firstName %>
+                                            <%= student.lastName %>
                                     </td>
                                     <td class="px-6 py-2">
-                                        <%= student.grade %>
+                                        <%= student.phone %>
                                     </td>
                                     <td class="px-6 py-2">
-                                        <%= new Date(student.enrolledDate).toLocaleDateString() %>
+                                        <%= new Date(student.dateOfBirth).toLocaleDateString() %>
                                     </td>
                                     <td class="px-6 py-2">
                                         <form action="/delete-student/<%= student._id %>" method="POST"
@@ -137,6 +136,7 @@
                     </table>
                 </div>
             </section>
+
         </main>
     </div>
 </body>
