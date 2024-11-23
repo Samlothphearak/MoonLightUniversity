@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/header') %>
+<body class="bg-gray-100 font-sans">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <header class="mb-6 flex justify-between items-center">
+        <h2 class="text-2xl font-semibold">Dashboard Overview</h2>
+        <form action="/add-student" method="POST">
+          <input type="text" name="name" placeholder="Name" class="p-2 border rounded" required>
+          <input type="text" name="grade" placeholder="Grade" class="p-2 border rounded" required>
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add New</button>
+        </form>
+      </header>
+
+      <!-- Metrics Section -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg font-medium">Total Students</h3>
+          <p class="mt-2 text-3xl font-bold text-blue-600"><%= students.length %></p>
+        </div>
+      </section>
+
+      <!-- Table Section -->
+      <section class="mt-8">
+        <h3 class="text-xl font-semibold mb-4">Recent Students</h3>
+        <div class="bg-white rounded-lg shadow overflow-x-auto">
+          <table class="min-w-full table-auto">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-6 py-2 text-left text-sm font-medium text-gray-700">Name</th>
+                <th class="px-6 py-2 text-left text-sm font-medium text-gray-700">Grade</th>
+                <th class="px-6 py-2 text-left text-sm font-medium text-gray-700">Enrolled Date</th>
+                <th class="px-6 py-2 text-left text-sm font-medium text-gray-700">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% students.forEach(student => { %>
+              <tr class="border-b">
+                <td class="px-6 py-2"><%= student.name %></td>
+                <td class="px-6 py-2"><%= student.grade %></td>
+                <td class="px-6 py-2"><%= new Date(student.enrolledDate).toLocaleDateString() %></td>
+                <td class="px-6 py-2">
+                  <form action="/delete-student/<%= student._id %>" method="POST" style="display: inline;">
+                    <button class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Delete</button>
+                  </form>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

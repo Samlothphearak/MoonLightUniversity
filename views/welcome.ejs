@@ -11,42 +11,64 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <!-- REMIX-ICON -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.css">
+    <!-- AOS CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+
+    <!-- AOS JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
 </head>
 
-<body class="bg-gray-50 font-sans">
+<body class="bg-gray-50 font-sans scroll-smooth">
 
     <!-- Navbar -->
-    <nav class="bg-blue-600 p-4 shadow-md">
+    <nav class="bg-blue-600 p-4 shadow-md fixed top-0 left-0 w-full z-50">
         <div class="container mx-auto flex justify-between items-center">
             <!-- Logo and Name Section -->
             <div class="flex items-center space-x-2">
-                <!-- Logo -->
                 <img src="/images/rupp_logo.png" alt="Royal University of Phnom Penh Logo" class="h-12">
-                <!-- University Name -->
-                <div class="text-white text-2xl font-bold">
-                    Royal University of Phnom Penh
-                </div>
+                <div class="text-white text-2xl font-bold">Royal University of Phnom Penh</div>
             </div>
 
             <!-- Navigation Links -->
             <div>
-                <a href="/home" class="text-white px-4 py-2 hover:bg-blue-500 rounded">Home</a>
-                <a href="/about" class="text-white px-4 py-2 hover:bg-blue-500 rounded">About Us</a>
-                <a href="/admissions" class="text-white px-4 py-2 hover:bg-blue-500 rounded">Admissions</a>
-                <a href="/courses" class="text-white px-4 py-2 hover:bg-blue-500 rounded">Courses</a>
-                <a href="/contact" class="text-white px-4 py-2 hover:bg-blue-500 rounded">Contact</a>
+                <a href="#home" class="text-white px-4 py-2 hover:bg-blue-500 rounded">Home</a>
+                <a href="#about" class="text-white px-4 py-2 hover:bg-blue-500 rounded">About Us</a>
+                <a href="#courses" class="text-white px-4 py-2 hover:bg-blue-500 rounded">Courses</a>
+                <a href="#contact" class="text-white px-4 py-2 hover:bg-blue-500 rounded">Contact</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="bg-blue-700 text-white py-20 text-center">
-        <div class="container mx-auto">
-            <h1 class="text-5xl font-extrabold">Welcome to the Royal University of Phnom Penh</h1>
-            <p class="mt-4 text-xl">Excellence in Education, Innovation, and Research</p>
-            <a href="/admissions"
-                class="mt-8 inline-block bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600">Apply
-                Now</a>
+    <section id="home" class="relative bg-blue-700 text-white py-20 text-center bg-cover bg-center">
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-blue-800 via-blue-700 to-blue-600 bg-opacity-80"></div>
+
+        <!-- Content -->
+        <div class="relative container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <!-- Text Content -->
+            <div data-aos="fade-right" data-aos-duration="1000">
+                <h1 class="text-5xl md:text-6xl font-extrabold leading-tight">
+                    Welcome to the <span class="text-yellow-400">Royal University of Phnom Penh</span>
+                </h1>
+                <p class="mt-4 text-xl md:text-2xl leading-relaxed">
+                    Excellence in <span class="text-yellow-300 font-semibold">Education</span>,
+                    <span class="text-yellow-300 font-semibold">Innovation</span>, and
+                    <span class="text-yellow-300 font-semibold">Research</span>
+                </p>
+                <a href="/admissions"
+                    class="mt-8 inline-block bg-yellow-500 text-white px-6 py-3 text-lg font-medium rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-2xl transition duration-300">
+                    Apply Now
+                </a>
+            </div>
+
+            <!-- Image Section -->
+            <div class="flex justify-center" data-aos="fade-up" data-aos-duration="1000">
+                <img src="https://img.freepik.com/free-photo/male-female-students-wear-face-chill-stand-front-university_1150-24691.jpg?ga=GA1.1.151523532.1731996135&semt=ais_hybrid"
+                    alt="Royal University of Phnom Penh"
+                    class="w-full max-w-md md:max-w-lg rounded-lg shadow-2xl transform hover:scale-105 transition duration-300">
+            </div>
         </div>
     </section>
 
@@ -305,8 +327,8 @@
 
             <!-- Footer Links -->
             <div class="space-x-6 mb-6">
-                <a href="/add-news" class="text-white hover:text-yellow-300 transition-colors">Add News</a>
-                <a href="/admin" class="text-white hover:text-yellow-300 transition-colors">Admin</a>
+                <a href="/admin" class="text-white hover:text-yellow-300 transition-colors">elearning</a>
+                <a href="/smsd" class="text-white hover:text-yellow-300 transition-colors">SMSD</a>
             </div>
 
             <!-- Social Media Links (Example) -->
@@ -324,6 +346,15 @@
         </div>
     </footer>
 
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000, // Animation duration in milliseconds
+            offset: 120, // Offset from the original trigger point
+            once: true, // Whether animation should happen only once
+            easing: 'ease-in-out', // Easing function for the animation
+        });
+    </script>
 
 </body>
 

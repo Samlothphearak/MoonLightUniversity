@@ -117,24 +117,33 @@ app.get("/index", async (req, res) => {
   }
 });
 
-// Add Student - Render Form
-app.get("/add-student", (req, res) => {
-  res.render("add-student"); // Render form to add a student
+// GET Add Student Page
+app.get('/add-student', (req, res) => {
+  const departments = ['Computer Science', 'Mathematics', 'Physics', 'Biology'];
+  res.render('add-student', { departments, error: null });
 });
 
-// Add Student - Handle Form Submission
-app.post("/add-student", async (req, res) => {
+// POST Add Student Form
+app.post('/add-student', (req, res) => {
   const { name, email, department } = req.body;
+
   if (!name || !email || !department) {
-    return res.status(400).send("All fields are required");
+      return res.render('add-student', { 
+          departments: ['Computer Science', 'Mathematics', 'Physics', 'Biology'],
+          error: 'All fields are required!'
+      });
   }
-  try {
-    await Student.create({ name, email, department });
-    res.redirect("/");
-  } catch (err) {
-    res.status(500).send("Error adding student");
-  }
+
+  // Save student to database (MongoDB)
+  const newStudent = new Student({ name, email, department });
+  newStudent.save()
+      .then(() => res.redirect('/students'))
+      .catch(err => res.render('add-student', { 
+          departments: ['Computer Science', 'Mathematics', 'Physics', 'Biology'],
+          error: 'Failed to save student. Please try again.' 
+      }));
 });
+
 
 // Delete Student
 app.post("/delete-student/:id", async (req, res) => {
@@ -334,6 +343,12 @@ app.get('/contact', (req, res) => {
 
 //   res.render('contact', { successMessage: 'Thank you for contacting us! We will get back to you soon.' });
 // });
+//===========================
+app.get('/smsd', async (req, res) => {
+  const students = await Student.find(); // Fetch students from MongoDB
+  res.render('smsd', { students });
+});
+//===========================
 app.get('/logout', (req, res) => {
   req.session.destroy(err => {
       if (err) {
