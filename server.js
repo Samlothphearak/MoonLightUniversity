@@ -11,6 +11,7 @@ const multer = require("multer");
 const path = require("path");
 const session = require("express-session");
 const nodemailer = require("nodemailer");
+const bcrypt = require('bcrypt');
 require("dotenv").config();
 
 const app = express();
@@ -89,9 +90,7 @@ app.get("/", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
-// Routes
-// Home - View All Students
+// ==============================Home - View All Students=========================
 app.get("/index", async (req, res) => {
   try {
     const students = await Student.find();
@@ -101,14 +100,14 @@ app.get("/index", async (req, res) => {
   }
 });
 
-// GET Add Student Page
+// ==============================GET Add Student Page==================================
 // Route to display the form (GET)
 app.get("/add-student", (req, res) => {
   res.render("add-student", { error: null, success: null });
 });
 
-// Route to handle form submission (POST)
-app.post("/add-student", upload.single("photo"), async (req, res) => {
+// ==================Route to handle form submission (POST)==============================
+app.post('/add-student', upload.single('photo'), async (req, res) => {
   const {
     firstName,
     lastName,
@@ -117,7 +116,9 @@ app.post("/add-student", upload.single("photo"), async (req, res) => {
     address,
     dateOfBirth,
     placeOfBirth,
+    password,
   } = req.body;
+
   const photo = req.file ? req.file.path : null;
 
   // Validate form fields
@@ -129,30 +130,34 @@ app.post("/add-student", upload.single("photo"), async (req, res) => {
     !address ||
     !dateOfBirth ||
     !placeOfBirth ||
-    !photo
+    !photo ||
+    !password
   ) {
-    return res.render("add-student", {
-      error: "All fields are required!",
+    return res.render('add-student', {
+      error: 'All fields are required!',
       success: null,
     });
   }
 
-  // Validate phone number (e.g., must be 9 digits for Cambodia)
-  const phoneRegex = /^[0-9]{9}$/; // Adjust the pattern as needed for your case
+  // Validate phone number (Cambodia: 9 digits)
+  const phoneRegex = /^[0-9]{9}$/;
   if (!phoneRegex.test(phone)) {
-    return res.render("add-student", {
-      error: "Phone number must be 9 digits.",
+    return res.render('add-student', {
+      error: 'Phone number must be 9 digits.',
       success: null,
     });
   }
 
-  // Generate a random Student ID (e.g., "S123456")
+  // Hash the password
+  const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
+
+  // Generate a random Student ID
   const studentID = 'S' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
 
-  // Create a new student document
   try {
+    // Create a new student document
     const student = new Student({
-      studentID,         // Assign the randomly generated student ID
+      studentID,
       firstName,
       lastName,
       email,
@@ -161,27 +166,26 @@ app.post("/add-student", upload.single("photo"), async (req, res) => {
       photo,
       dateOfBirth,
       placeOfBirth,
+      password: hashedPassword, // Store hashed password
     });
 
     // Save the student document to the database
     await student.save();
 
     // Render the form with a success message
-    res.render("add-student", {
+    res.render('add-student', {
       error: null,
-      success: `Student added successfully! Student ID: ${studentID}`, // Display the Student ID
+      success: `Student added successfully! Student ID: ${studentID}`,
     });
   } catch (err) {
     console.error(err);
-    res.render("add-student", {
-      error: "Error adding student. Please try again.",
+    res.render('add-student', {
+      error: 'Error adding student. Please try again.',
       success: null,
     });
   }
 });
-
-
-// Delete Student
+// ====================================Delete Student=====================
 app.post("/delete-student/:id", async (req, res) => {
   try {
     await Student.findByIdAndDelete(req.params.id);
@@ -191,7 +195,7 @@ app.post("/delete-student/:id", async (req, res) => {
   }
 });
 
-// Edit Student - Render Form for Editing
+// ===========================Edit Student - Render Form for =====================
 app.get("/edit-student/:id", async (req, res) => {
   try {
     const student = await Student.findById(req.params.id);
@@ -202,7 +206,7 @@ app.get("/edit-student/:id", async (req, res) => {
   }
 });
 
-// Edit Student - Handle Form Submission
+// =======================Edit Student - Handle Form Submission=======================
 app.post("/edit-student/:id", async (req, res) => {
   const { name, email, department } = req.body;
   if (!name || !email || !department) {
@@ -215,7 +219,7 @@ app.post("/edit-student/:id", async (req, res) => {
     res.status(500).send("Error updating student");
   }
 });
-//============= News-Sections =================
+//========================= News-Sections =================
 app.get("/add-news", (req, res) => {
   // Check if the admin is authenticated
   if (req.session.isAuthenticated) {
@@ -230,7 +234,7 @@ app.get("/add-news", (req, res) => {
     res.redirect("/admin-login");
   }
 });
-
+//================================================================
 app.post("/news/add", upload.single("imageFile"), async (req, res) => {
   const { title, description, imageUrl, author, date, expiredAt } = req.body;
 
@@ -408,7 +412,6 @@ app.get("/student-dashboard", async (req, res) => {
   }
 });
 //==================Edit-profile==============================================
-// Route to render the Edit Profile page
 app.get('/edit-profile', async (req, res) => {
   try {
     if (!req.session.studentId) {
@@ -448,19 +451,71 @@ app.post('/update-profile', upload.single('photo'), async (req, res) => {
     res.status(500).send("Error updating profile.");
   }
 });
+//=============================================
+// Route to render the login page
+app.get('/login', (req, res) => {
+  res.render('login', { error: null }); // Render the login page with no error initially
+});
 
-// Route to render the Profile page (view profile)
-app.get('/profile', async (req, res) => {
-  try {
-    if (!req.session.studentId) {
-      return res.redirect('/login'); // Redirect to login if no session
-    }
-    const student = await Student.findById(req.session.studentId);
-    res.render('profile', { student });
-  } catch (err) {
-    res.status(500).send("Error retrieving student profile.");
+app.post('/login', async (req, res) => {
+  const { studentID, password } = req.body;
+
+  // Find the student by Student ID
+  const student = await Student.findOne({ studentID });
+
+  if (!student) {
+    return res.render('login', {
+      error: 'Student ID not found', // Pass the error message back to the login page
+    });
+  }
+
+  // Compare the password with the hashed password in the database
+  const isMatch = await bcrypt.compare(password, student.password);
+
+  if (isMatch) {
+    // Store the student's ID in the session
+    req.session.studentId = student._id;
+
+    // Pass student data to the dashboard page
+    res.render('student-dashboard', { student });
+  } else {
+    return res.render('login', {
+      error: 'Invalid password', // Pass the invalid password error back to the login page
+    });
   }
 });
+//================ send-notification ===========================================
+app.get('/send-notification', (req, res) => {
+  res.render('send-notification', { error: null, success: null });
+});
+
+app.post('/send-notification', async (req, res) => {
+  const { title, message, recipients } = req.body;
+
+  if (!title || !message || !recipients) {
+      return res.render('send-notification', {
+          error: "All fields are required!",
+          success: null,
+      });
+  }
+
+  try {
+      // Logic to send notification (e.g., save to DB, send via email/SMS)
+      // ...
+
+      res.render('send-notification', {
+          error: null,
+          success: "Notification sent successfully!",
+      });
+  } catch (err) {
+      console.error(err);
+      res.render('send-notification', {
+          error: "Failed to send notification. Try again!",
+          success: null,
+      });
+  }
+});
+
 // ==============Start Server===========================
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)

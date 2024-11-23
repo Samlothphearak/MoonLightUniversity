@@ -27,13 +27,13 @@
                     <div>
                         <!-- Display student name and email -->
                         <p class="text-lg font-bold text-gray-800">
-                            <%= student.firstName %>
-                                <%= student.lastName %>
+                            <%= student.firstName %> <%= student.lastName %> (<%= student.studentID %>)
                         </p>
                         <p class="text-sm text-gray-500">
                             <%= student.email %>
                         </p>
                     </div>
+                    
                 </div>
                 <div class="mt-4">
                     <!-- Display student phone, date of birth, and address -->

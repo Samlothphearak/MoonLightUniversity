@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- REMIX-ICON -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.css">
+    <!-- AOS CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+    <!-- AOS JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+</head>
+
+<body class="bg-gray-50 font-sans min-h-screen">
+    <div class="container mx-auto px-6 py-8">
+        <!-- Dashboard Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Profile Section -->
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <div class="flex items-center mb-6">
+                    <!-- Display student profile picture -->
+                    <img src="<%= student.photo %>" alt="Profile Picture" class="w-16 h-16 rounded-full mr-4">
+                    <div>
+                        <!-- Display student name and email -->
+                        <p class="text-lg font-bold text-gray-800">
+                            <%= student.firstName %> <%= student.lastName %>
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            <%= student.email %>
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <!-- Display student phone, date of birth, and address -->
+                    <p class="text-sm text-gray-600"><strong>Phone:</strong> <%= student.phone %></p>
+                    <p class="text-sm text-gray-600"><strong>Date of Birth:</strong> <%= student.formattedDateOfBirth %></p>
+                    <p class="text-sm text-gray-600"><strong>Address:</strong> <%= student.address %></p>
+                </div>
+                <div class="mt-4">
+                    <a href="/edit-profile" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                        Edit Profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- Notifications Section -->
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Notifications</h2>
+                <ul class="space-y-3">
+                    <% if (student.notifications && student.notifications.length > 0) { %>
+                        <% student.notifications.forEach(function(notification) { %>
+                            <li class="flex items-center">
+                                <i class="ri-notification-2-line text-green-600 mr-3"></i>
+                                <p class="text-sm text-gray-700"><%= notification.message %></p>
+                            </li>
+                        <% }) %>
+                    <% } else { %>
+                        <li class="text-sm text-gray-500">No notifications available.</li>
+                    <% } %>
+                </ul>
+                <% if (student.notifications && student.notifications.length > 0) { %>
+                    <div class="mt-4">
+                        <a href="/notifications" class="text-green-600 text-sm hover:underline">View all notifications</a>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- Your Courses Section -->
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Your Courses</h2>
+                <ul class="space-y-3">
+                    <% if (student.courses && student.courses.length > 0) { %>
+                        <% student.courses.forEach(function(course) { %>
+                            <li class="flex items-center">
+                                <i class="ri-book-line text-green-600 mr-3"></i>
+                                <p class="text-sm text-gray-700"><%= course.name %></p>
+                            </li>
+                        <% }) %>
+                    <% } else { %>
+                        <li class="text-sm text-gray-500">No courses enrolled yet.</li>
+                    <% } %>
+                </ul>
+                <% if (student.courses && student.courses.length > 0) { %>
+                    <div class="mt-4">
+                        <a href="/courses" class="text-green-600 text-sm hover:underline">View all courses</a>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- Schedule Section -->
+            <section class="bg-white shadow-lg rounded-lg p-6 mt-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Upcoming Schedule</h2>
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-2 text-sm font-medium text-gray-600">Date</th>
+                            <th class="px-4 py-2 text-sm font-medium text-gray-600">Time</th>
+                            <th class="px-4 py-2 text-sm font-medium text-gray-600">Event</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (student.schedule && student.schedule.length > 0) { %>
+                            <% student.schedule.forEach(function(event) { %>
+                                <tr>
+                                    <td class="px-4 py-2 text-sm text-gray-700"><%= event.date %></td>
+                                    <td class="px-4 py-2 text-sm text-gray-700"><%= event.time %></td>
+                                    <td class="px-4 py-2 text-sm text-gray-700"><%= event.event %></td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="3" class="px-4 py-2 text-sm text-gray-700">No upcoming events</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </section>
+        </section>
+    </div>
+</body>
+
+</html>
