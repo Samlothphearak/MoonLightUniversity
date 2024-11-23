@@ -16,14 +16,17 @@
 </head>
 
 <body class="bg-gray-50 font-sans min-h-screen">
+
     <div class="container mx-auto px-6 py-8">
         <!-- Dashboard Grid -->
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Profile Section -->
             <div class="bg-white shadow-lg rounded-lg p-6">
-                <div class="flex items-center mb-6">
-                    <!-- Display student profile picture -->
-                    <img src="<%= student.photo %>" alt="Profile Picture" class="w-16 h-16 rounded-full mr-4">
+                <div class="flex items-center mb-6 space-x-4">
+                    <!-- Display student profile picture with fixed size and border -->
+                    <img src="<%= student.photo %>" alt="Profile Picture"
+                        class="w-20 h-20 rounded-full object-cover border-2 border-gray-200 cursor-pointer"
+                        onclick="openProfilePicture('<%= student.photo %>')">
                     <div>
                         <!-- Display student name and email -->
                         <p class="text-lg font-bold text-gray-800">
@@ -34,12 +37,12 @@
                             <%= student.email %>
                         </p>
                     </div>
-
                 </div>
-                <div class="mt-4">
-                    <!-- Display student phone, date of birth, and address -->
-                    <p class="text-sm text-gray-600"><strong>Phone:</strong>
-                        <%= student.studentID %>, <%= student.group ? student.group : 'Unknown' %>
+
+                <div class="space-y-2">
+                    <!-- Display student details -->
+                    <p class="text-sm text-gray-600"><strong>Student ID:</strong>
+                        <%= student.studentID %>
                     </p>
                     <p class="text-sm text-gray-600"><strong>Phone:</strong>
                         <%= student.phone %>
@@ -51,36 +54,82 @@
                         <%= student.address %>
                     </p>
                 </div>
+
                 <div class="mt-4">
                     <a href="/edit-profile"
-                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 cursor-pointer">
                         Edit Profile
                     </a>
                 </div>
             </div>
 
-            <!-- Notifications Section -->
-            <div class="bg-white shadow-lg rounded-lg p-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Notifications</h2>
-                <ul class="space-y-3">
-                    <% if (student.notifications && student.notifications.length> 0) { %>
-                        <% student.notifications.forEach(function(notification) { %>
-                            <li class="flex items-center">
-                                <i class="ri-notification-2-line text-green-600 mr-3"></i>
-                                <p class="text-sm text-gray-700">
-                                    <%= notification.message %>
-                                        <span class="text-xs text-gray-500"> - <%= notification.formattedDate %></span>
-                                </p>
-                            </li>
-                            <% }) %>
-                                <% } else { %>
-                                    <li class="text-sm text-gray-500">No notifications available.</li>
-                                    <% } %>
-                </ul>
+            <!-- Modal for Viewing Profile Picture -->
+            <div id="profileModal"
+                class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+                <div class="bg-white p-6 rounded-lg max-w-lg w-full">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Profile Picture</h3>
+                    <!-- Display large profile picture -->
+                    <img id="modalProfilePicture" src="<%= student.photo %>" alt="Profile Picture" class="w-full h-auto rounded-lg">
+                    <div class="mt-4">
+                        <button onclick="closeProfileModal()"
+                            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300">
+                            Close
+                        </button>
+                    </div>
+                </div>
             </div>
 
+           <!-- Notifications Section -->
+<div class="bg-white shadow-lg rounded-lg p-6">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Notifications</h2>
+    <ul class="space-y-3">
+        <!-- Sample Notification 1 -->
+        <li class="flex items-center p-3 bg-green-50 border-l-4 border-green-500 rounded-lg shadow-sm hover:bg-green-100 transition-all duration-300 cursor-pointer"
+            onclick="openNotificationDetails('Notification 1 details here')">
+            <i class="ri-notification-2-line text-green-600 text-xl mr-3"></i>
+            <div>
+                <p class="text-xs text-gray-800 font-semibold">Your profile has been updated successfully.</p>
+                <span class="text-xs text-gray-500"> - 11/23/2024</span>
+            </div>
+        </li>
+
+        <!-- Sample Notification 2 -->
+        <li class="flex items-center p-3 bg-blue-50 border-l-4 border-blue-500 rounded-lg shadow-sm hover:bg-blue-100 transition-all duration-300 cursor-pointer"
+            onclick="openNotificationDetails('New course materials available for your current module.')">
+            <i class="ri-notification-2-line text-blue-600 text-xl mr-3"></i>
+            <div>
+                <p class="text-xs text-gray-800 font-semibold">New course materials are available for your current module.</p>
+                <span class="text-xs text-gray-500"> - 11/22/2024</span>
+            </div>
+        </li>
+
+        <!-- Sample Notification 3 -->
+        <li class="flex items-center p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded-lg shadow-sm hover:bg-yellow-100 transition-all duration-300 cursor-pointer"
+            onclick="openNotificationDetails('Your attendance for the last month is now available.')">
+            <i class="ri-notification-2-line text-yellow-600 text-xl mr-3"></i>
+            <div>
+                <p class="text-xs text-gray-800 font-semibold">Your attendance for the last month is now available.</p>
+                <span class="text-xs text-gray-500"> - 11/21/2024</span>
+            </div>
+        </li>
+    </ul>
+</div>
 
 
+            <!-- Modal for Displaying Notification Details -->
+            <div id="notificationModal"
+                class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+                <div class="bg-white p-6 rounded-lg max-w-sm w-full">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Notification Details</h3>
+                    <p id="notificationDetails" class="text-sm text-gray-700"></p>
+                    <div class="mt-4">
+                        <button onclick="closeNotificationDetails()"
+                            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             <!-- Your Courses Section -->
             <div class="bg-white shadow-lg rounded-lg p-6">
@@ -89,8 +138,8 @@
                     <!-- Loop through courses dynamically -->
                     <% if (student.courses && student.courses.length> 0) { %>
                         <% student.courses.forEach(function(course) { %>
-                            <li class="flex items-center">
-                                <i class="ri-book-line text-green-600 mr-3"></i>
+                            <li class="flex items-center space-x-3 p-2 border-b border-gray-200">
+                                <i class="ri-book-line text-green-600"></i>
                                 <p class="text-sm text-gray-700">
                                     <%= course.name %>
                                 </p>
@@ -100,6 +149,7 @@
                                     <li class="text-sm text-gray-500">No courses enrolled yet.</li>
                                     <% } %>
                 </ul>
+
                 <!-- Conditionally render the "View all courses" link -->
                 <% if (student.courses && student.courses.length> 0) { %>
                     <div class="mt-4">
@@ -108,47 +158,94 @@
                     <% } %>
             </div>
 
+        </section>
 
+        <!-- Schedule Section -->
+        <section class="bg-white shadow-lg rounded-lg p-6 mt-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Upcoming Schedule</h2>
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-2 text-sm font-medium text-gray-600">Date</th>
+                        <th class="px-4 py-2 text-sm font-medium text-gray-600">Time</th>
+                        <th class="px-4 py-2 text-sm font-medium text-gray-600">Event</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Display upcoming schedule -->
+                    <% if (student.schedule && student.schedule.length> 0) { %>
+                        <% student.schedule.forEach(function(event) { %>
+                            <tr>
+                                <td class="px-4 py-2 text-sm text-gray-700">
+                                    <%= event.date %>
+                                </td>
+                                <td class="px-4 py-2 text-sm text-gray-700">
+                                    <%= event.time %>
+                                </td>
+                                <td class="px-4 py-2 text-sm text-gray-700">
+                                    <%= event.event %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="3" class="px-4 py-2 text-sm text-gray-700">No upcoming events</td>
+                                    </tr>
+                                    <% } %>
+                </tbody>
+            </table>
+        </section>
 
-            <!-- Schedule Section -->
-            <section class="bg-white shadow-lg rounded-lg p-6 mt-8">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Upcoming Schedule</h2>
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="px-4 py-2 text-sm font-medium text-gray-600">Date</th>
-                            <th class="px-4 py-2 text-sm font-medium text-gray-600">Time</th>
-                            <th class="px-4 py-2 text-sm font-medium text-gray-600">Event</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Display upcoming schedule -->
-                        <% if (student.schedule && student.schedule.length> 0) { %>
-                            <% student.schedule.forEach(function(event) { %>
-                                <tr>
-                                    <td class="px-4 py-2 text-sm text-gray-700">
-                                        <%= event.date %>
-                                    </td>
-                                    <td class="px-4 py-2 text-sm text-gray-700">
-                                        <%= event.time %>
-                                    </td>
-                                    <td class="px-4 py-2 text-sm text-gray-700">
-                                        <%= event.event %>
-                                    </td>
-                                </tr>
-                                <% }); %>
-                                    <% } else { %>
-                                        <tr>
-                                            <td colspan="3" class="px-4 py-2 text-sm text-gray-700">No upcoming events
-                                            </td>
-                                        </tr>
-                                        <% } %>
+        <!-- Recent Activity Section -->
+        <section class="bg-white shadow-lg rounded-lg p-6 mt-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h2>
+            <ul class="space-y-4">
+                <li
+                    class="flex items-center p-4 border-l-4 border-blue-500 bg-blue-50 rounded-lg shadow-sm hover:bg-blue-100 transition duration-300">
+                    <i class="ri-timer-line text-blue-600 text-2xl mr-4"></i>
+                    <div>
+                        <p class="text-sm text-gray-800 font-semibold">Completed quiz on Introduction to Programming.
+                        </p>
+                        <span class="text-xs text-gray-500"> - 11/23/2024</span>
+                    </div>
+                </li>
+                <li
+                    class="flex items-center p-4 border-l-4 border-yellow-500 bg-yellow-50 rounded-lg shadow-sm hover:bg-yellow-100 transition duration-300">
+                    <i class="ri-timer-line text-yellow-600 text-2xl mr-4"></i>
+                    <div>
+                        <p class="text-sm text-gray-800 font-semibold">Missed assignment submission for Data Structures.
+                        </p>
+                        <span class="text-xs text-gray-500"> - 11/22/2024</span>
+                    </div>
+                </li>
+            </ul>
+        </section>
 
-                    </tbody>
-                </table>
-            </section>
+        <!-- Resources Section -->
+        <section class="bg-white shadow-lg rounded-lg p-6 mt-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Resources</h2>
+            <ul class="space-y-4">
+                <li
+                    class="flex items-center p-4 border-l-4 border-green-500 bg-green-50 rounded-lg shadow-sm hover:bg-green-100 transition duration-300">
+                    <i class="ri-file-list-3-line text-green-600 text-2xl mr-4"></i>
+                    <div>
+                        <p class="text-sm text-gray-800 font-semibold">Course Overview PDF for Data Structures.</p>
+                        <span class="text-xs text-gray-500"> - 11/21/2024</span>
+                    </div>
+                </li>
+                <li
+                    class="flex items-center p-4 border-l-4 border-blue-500 bg-blue-50 rounded-lg shadow-sm hover:bg-blue-100 transition duration-300">
+                    <i class="ri-video-line text-blue-600 text-2xl mr-4"></i>
+                    <div>
+                        <p class="text-sm text-gray-800 font-semibold">Watch: "Understanding Linked Lists" (Video).</p>
+                        <span class="text-xs text-gray-500"> - 11/20/2024</span>
+                    </div>
+                </li>
+            </ul>
+        </section>
 
     </div>
+    <script src="/js/index.js"></script>
 </body>
 
 </html>

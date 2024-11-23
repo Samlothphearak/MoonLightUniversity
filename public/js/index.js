@@ -1,43 +1,24 @@
-const API_URL = 'http://localhost:5000/students';
+//============ open the notification =================================================================
+function openNotificationDetails(details) {
+        // Show the modal with the notification details
+        document.getElementById('notificationDetails').innerText = details;
+        document.getElementById('notificationModal').classList.remove('hidden');
+    }
 
-async function fetchStudents() {
-    const response = await fetch(API_URL);
-    const students = await response.json();
-    const table = document.getElementById('studentTable');
-    table.innerHTML = students.map(student => `
-        <tr>
-            <td>${student.name}</td>
-            <td>${student.email}</td>
-            <td>${student.department}</td>
-            <td>${new Date(student.enrollmentDate).toLocaleDateString()}</td>
-            <td>
-                <button onclick="deleteStudent('${student._id}')">Delete</button>
-            </td>
-        </tr>
-    `).join('');
+    function closeNotificationDetails() {
+        // Close the modal
+        document.getElementById('notificationModal').classList.add('hidden');
+    }
+ //===================Open profile picture modal===================
+ function openProfilePicture(imageSrc) {
+    const modal = document.getElementById('profileModal');
+    const modalImage = document.getElementById('modalProfilePicture');
+    modalImage.src = imageSrc; // Set the source of the image in the modal
+    modal.classList.remove('hidden'); // Show the modal
 }
 
-async function addStudent(event) {
-    event.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const department = document.getElementById('department').value;
-    const enrollmentDate = document.getElementById('enrollmentDate').value;
-
-    await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, department, enrollmentDate })
-    });
-    fetchStudents();
+// Close profile picture modal
+function closeProfileModal() {
+    const modal = document.getElementById('profileModal');
+    modal.classList.add('hidden'); // Hide the modal
 }
-
-async function deleteStudent(id) {
-    await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-    fetchStudents();
-}
-
-document.getElementById('studentForm').addEventListener('submit', addStudent);
-
-fetchStudents();
-//================================================================

@@ -408,19 +408,34 @@ app.get("/logout", (req, res) => {
 //============= student-dashboard ================================
 app.get("/student-dashboard", async (req, res) => {
   try {
-    // Replace this with the logic for fetching the logged-in user
+    // Check if session contains studentID
+    if (!req.session.studentID) {
+      return res.status(400).send("Student ID is required in session.");
+    }
+
+    // Fetch student based on studentID from session
     const student = await Student.findOne({ studentID: req.session.studentID });
 
     if (!student) {
       return res.status(404).send("Student not found");
     }
 
-    // Format notifications for better display (e.g., format the date)
-    student.notifications = student.notifications.map((notification) => ({
-      ...notification,
-      formattedDate: notification.date.toLocaleDateString(), // Adjust as needed
-    }));
+    // Check and format notifications with date handling
+    if (student.notifications && student.notifications.length > 0) {
+      student.notifications = student.notifications.map((notification) => {
+        // Safely format the date if it exists
+        const formattedDate = notification.date
+          ? new Date(notification.date).toLocaleDateString() // Adjust as needed
+          : "Date not available"; // Fallback if no date
 
+        return {
+          ...notification,
+          formattedDate: formattedDate,
+        };
+      });
+    }
+
+    // Render student dashboard with notifications
     res.render("student-dashboard", { student });
   } catch (err) {
     console.error("Error fetching student:", err);
@@ -511,48 +526,49 @@ app.post('/send-notification', async (req, res) => {
   const { title, message, recipients } = req.body;
 
   if (!title || !message || !recipients) {
-      return res.render('send-notification', {
-          error: 'All fields are required!',
-          success: null,
-      });
+    return res.render('send-notification', {
+      error: 'All fields are required!',
+      success: null,
+    });
   }
 
   try {
-      let studentList;
-      let recipientType = recipients; // Directly use the selected recipient type
+    let studentList;
+    let recipientType = recipients; // Get the recipient type (group or all)
 
-      // Fetch students based on recipient type
-      if (recipients === 'all') {
-          studentList = await Student.find(); // Send to all students
-      } else {
-          // Fetch students based on group or category (e.g., 'ADI3', 'ASI4')
-          studentList = await Student.find({ group: recipients });
-      }
+    // Fetch students based on recipient type
+    if (recipients === 'all') {
+      studentList = await Student.find(); // Send to all students
+    } else {
+      // Fetch students based on group (e.g., 'ADI3', 'ASI4')
+      studentList = await Student.find({ group: recipients });
+    }
 
-      // Send notification to selected students and save to DB
-      studentList.forEach(async (student) => {
-          const notification = new Notification({
-              title,
-              message,
-              studentId: student._id, // Store the studentId for specific students
-              recipientType,
-          });
-
-          await notification.save();
+    // Send notification to selected students and save to DB
+    studentList.forEach(async (student) => {
+      const notification = new Notification({
+        title,
+        message,
+        recipients: [recipients], // Store the selected group(s) as recipients
+        studentId: student._id, // Store the studentId of the recipient
       });
 
-      res.render('send-notification', {
-          error: null,
-          success: 'Notification sent successfully!',
-      });
+      await notification.save(); // Save the notification in the database
+    });
+
+    res.render('send-notification', {
+      error: null,
+      success: 'Notification sent successfully!',
+    });
   } catch (err) {
-      console.error('Error sending notification:', err);
-      res.render('send-notification', {
-          error: 'There was an error sending the notification. Please try again.',
-          success: null,
-      });
+    console.error('Error sending notification:', err);
+    res.render('send-notification', {
+      error: 'There was an error sending the notification. Please try again.',
+      success: null,
+    });
   }
 });
+
 // ==============Start Server===========================
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)
