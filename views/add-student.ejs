@@ -17,8 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 </head>
 
-<body
-    class="bg-gradient-to-r from-green-50 via-white to-green-100 font-sans min-h-screen flex items-center justify-center">
+<body class="bg-gradient-to-r from-green-50 via-white to-green-100 font-sans min-h-screen flex items-center justify-center">
     <div class="container mx-auto px-4">
         <!-- Header -->
         <header class="text-center mb-8">
@@ -45,8 +44,7 @@
             <% } %>
 
             <!-- Form -->
-            <form action="/add-student" method="POST" enctype="multipart/form-data"
-                class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form action="/add-student" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- First Name -->
                 <div>
                     <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
@@ -110,12 +108,29 @@
                         class="mt-2 p-3 w-full border rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
                         required aria-label="Place of Birth">
                 </div>
-                 <!-- Password -->
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" name="password" id="password" required
-                    class="mt-2 p-2 w-full border rounded-lg">
-            </div>
+
+                <!-- Group -->
+                <div>
+                    <label for="group" class="block text-sm font-medium text-gray-700">Group</label>
+                    <select name="group" id="group"
+                        class="mt-2 p-3 w-full border rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500" required>
+                        <option value="ADI3">ADI3</option>
+                        <option value="ADI4">ADI4</option>
+                        <option value="ASI3">ASI3</option>
+                        <option value="ASI4">ASI4</option>
+                        <option value="ASI13">ASI13</option>
+                        <option value="ASI14">ASI14</option>
+                        <option value="ASI23">ASI23</option>
+                        <option value="ASI24">ASI24</option>
+                    </select>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" name="password" id="password" required
+                        class="mt-2 p-2 w-full border rounded-lg">
+                </div>
 
                 <!-- Submit Button -->
                 <div class="col-span-full">

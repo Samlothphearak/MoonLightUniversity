@@ -24,6 +24,11 @@ const studentSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  group: { 
+    type: String,
+    enum: ['ADI3', 'ADI4', 'ASI3', 'ASI4', 'ASI13', 'ASI14', 'ASI23', 'ASI24'],
+    required: true,
+},
   password: {
     type: String,
     required: true,

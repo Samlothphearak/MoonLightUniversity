@@ -117,6 +117,7 @@ app.post('/add-student', upload.single('photo'), async (req, res) => {
     dateOfBirth,
     placeOfBirth,
     password,
+    group, // Add the group to the destructuring
   } = req.body;
 
   const photo = req.file ? req.file.path : null;
@@ -131,7 +132,8 @@ app.post('/add-student', upload.single('photo'), async (req, res) => {
     !dateOfBirth ||
     !placeOfBirth ||
     !photo ||
-    !password
+    !password ||
+    !group // Ensure the group is selected
   ) {
     return res.render('add-student', {
       error: 'All fields are required!',
@@ -155,7 +157,7 @@ app.post('/add-student', upload.single('photo'), async (req, res) => {
   const studentID = 'S' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
 
   try {
-    // Create a new student document
+    // Create a new student document, including the group
     const student = new Student({
       studentID,
       firstName,
@@ -167,6 +169,7 @@ app.post('/add-student', upload.single('photo'), async (req, res) => {
       dateOfBirth,
       placeOfBirth,
       password: hashedPassword, // Store hashed password
+      group, // Store the selected group
     });
 
     // Save the student document to the database
@@ -185,6 +188,7 @@ app.post('/add-student', upload.single('photo'), async (req, res) => {
     });
   }
 });
+
 // ====================================Delete Student=====================
 app.post("/delete-student/:id", async (req, res) => {
   try {
@@ -404,13 +408,26 @@ app.get("/logout", (req, res) => {
 //============= student-dashboard ================================
 app.get("/student-dashboard", async (req, res) => {
   try {
-    const student = await Student.findOne(); // Fetch a single student (for example, the logged-in user)
-    res.render("student-dashboard", { student }); // Pass the student object to the template
+    // Replace this with the logic for fetching the logged-in user
+    const student = await Student.findOne({ studentID: req.session.studentID });
+
+    if (!student) {
+      return res.status(404).send("Student not found");
+    }
+
+    // Format notifications for better display (e.g., format the date)
+    student.notifications = student.notifications.map((notification) => ({
+      ...notification,
+      formattedDate: notification.date.toLocaleDateString(), // Adjust as needed
+    }));
+
+    res.render("student-dashboard", { student });
   } catch (err) {
     console.error("Error fetching student:", err);
     res.status(500).send("Server Error");
   }
 });
+
 //==================Edit-profile==============================================
 app.get('/edit-profile', async (req, res) => {
   try {
@@ -489,33 +506,53 @@ app.get('/send-notification', (req, res) => {
   res.render('send-notification', { error: null, success: null });
 });
 
+// Route to handle the form submission and save the notification
 app.post('/send-notification', async (req, res) => {
   const { title, message, recipients } = req.body;
 
   if (!title || !message || !recipients) {
       return res.render('send-notification', {
-          error: "All fields are required!",
+          error: 'All fields are required!',
           success: null,
       });
   }
 
   try {
-      // Logic to send notification (e.g., save to DB, send via email/SMS)
-      // ...
+      let studentList;
+      let recipientType = recipients; // Directly use the selected recipient type
+
+      // Fetch students based on recipient type
+      if (recipients === 'all') {
+          studentList = await Student.find(); // Send to all students
+      } else {
+          // Fetch students based on group or category (e.g., 'ADI3', 'ASI4')
+          studentList = await Student.find({ group: recipients });
+      }
+
+      // Send notification to selected students and save to DB
+      studentList.forEach(async (student) => {
+          const notification = new Notification({
+              title,
+              message,
+              studentId: student._id, // Store the studentId for specific students
+              recipientType,
+          });
+
+          await notification.save();
+      });
 
       res.render('send-notification', {
           error: null,
-          success: "Notification sent successfully!",
+          success: 'Notification sent successfully!',
       });
   } catch (err) {
-      console.error(err);
+      console.error('Error sending notification:', err);
       res.render('send-notification', {
-          error: "Failed to send notification. Try again!",
+          error: 'There was an error sending the notification. Please try again.',
           success: null,
       });
   }
 });
-
 // ==============Start Server===========================
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)
