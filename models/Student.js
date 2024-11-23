@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const moment = require("moment"); // We use Moment.js to format the date
 
 // Define the Notification schema
 const notificationSchema = new mongoose.Schema({
@@ -12,12 +13,22 @@ const notificationSchema = new mongoose.Schema({
   },
   isRead: {
     type: Boolean,
-    default: false, // To track if the notification has been read
+    default: false,
   },
 });
 
 // Define the Student schema
 const studentSchema = new mongoose.Schema({
+  studentID: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    // Ideally, password should be hashed for security
+  },
   firstName: {
     type: String,
     required: true,
@@ -41,9 +52,9 @@ const studentSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: function (v) {
-        return /^[0-9]{9}$/.test(v); // Adjusted for 9 digits
+        return /^[0-9]{9}$/.test(v); // Validate for 9 digits
       },
-      message: 'Phone number must contain exactly 9 digits.',
+      message: "Phone number must contain exactly 9 digits.",
     },
   },
   address: {
@@ -52,7 +63,7 @@ const studentSchema = new mongoose.Schema({
     trim: true,
   },
   photo: {
-    type: String, // Store the file path or URL of the uploaded photo
+    type: String,
     default: "/public/images/default-photo.jpg",
   },
   dateOfBirth: {
@@ -68,21 +79,34 @@ const studentSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  courses: [String], // Example of enrolled courses
-  notifications: [notificationSchema], // Embedded notifications schema
+  courses: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course", // Reference to the Course model
+    },
+  ], // Array to store references to courses
+  notifications: [notificationSchema], // Embedded notifications
 });
 
-// Virtual for student's age based on dateOfBirth
+// Virtual for student's age
 studentSchema.virtual("age").get(function () {
   const today = new Date();
   const birthDate = new Date(this.dateOfBirth);
   let age = today.getFullYear() - birthDate.getFullYear();
   const month = today.getMonth();
   const day = today.getDate();
-  if (month < birthDate.getMonth() || (month === birthDate.getMonth() && day < birthDate.getDate())) {
+  if (
+    month < birthDate.getMonth() ||
+    (month === birthDate.getMonth() && day < birthDate.getDate())
+  ) {
     age--;
   }
   return age;
+});
+
+// Virtual for formatted dateOfBirth
+studentSchema.virtual("formattedDateOfBirth").get(function () {
+  return moment(this.dateOfBirth).format("D MMMM, YYYY"); // Format like "November 23, 2024"
 });
 
 // Create the Student model

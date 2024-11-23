@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/css/output.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.css">
+</head>
+<body class="bg-gradient-to-r from-green-50 via-white to-green-100 font-sans min-h-screen flex items-center justify-center">
+    <div class="container mx-auto px-4">
+        <header class="text-center mb-8">
+            <h1 class="text-5xl font-bold text-green-700">Student Login</h1>
+            <p class="mt-2 text-gray-600 text-lg">Enter your Student ID and password.</p>
+        </header>
+
+        <!-- Form Card -->
+        <section class="bg-white shadow-lg rounded-xl p-8 max-w-4xl mx-auto">
+            <form action="/login" method="POST" class="grid grid-cols-1 gap-6">
+                <!-- Student ID -->
+                <div>
+                    <label for="studentID" class="block text-sm font-medium text-gray-700">Student ID</label>
+                    <input type="text" name="studentID" id="studentID" placeholder="Enter your student ID"
+                        class="mt-2 p-3 w-full border rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500" required>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" name="password" id="password" placeholder="Enter password"
+                        class="mt-2 p-3 w-full border rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500" required>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit"
+                        class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold shadow-md hover:bg-green-700 transition duration-300">
+                        Login
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+</body>
+</html>

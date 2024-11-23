@@ -11,36 +11,41 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.css">
     <!-- AOS CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
-
     <!-- AOS JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 </head>
 
 <body class="bg-gray-50 font-sans min-h-screen">
     <div class="container mx-auto px-6 py-8">
-
-        <!-- Header Section -->
-        <header class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-green-700">Welcome,!</h1>
-            <p class="mt-2 text-lg text-gray-600">Here's your dashboard overview.</p>
-        </header>
-
         <!-- Dashboard Grid -->
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Profile Section -->
             <div class="bg-white shadow-lg rounded-lg p-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Your Profile</h2>
-                <div class="flex items-center">
-                    <img src="/path/to/profile-picture.jpg" alt="Profile Picture" class="w-16 h-16 rounded-full mr-4">
+                <div class="flex items-center mb-6">
+                    <!-- Display student profile picture -->
+                    <img src="<%= student.photo %>" alt="Profile Picture" class="w-16 h-16 rounded-full mr-4">
                     <div>
-                        <p class="text-lg font-bold text-gray-800">StudentName</p>
-                        <p class="text-sm text-gray-500">student@example.com</p>
+                        <!-- Display student name and email -->
+                        <p class="text-lg font-bold text-gray-800">
+                            <%= student.firstName %>
+                                <%= student.lastName %>
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            <%= student.email %>
+                        </p>
                     </div>
                 </div>
                 <div class="mt-4">
-                    <p class="text-sm text-gray-600"><strong>Phone:</strong> +123 456 789</p>
-                    <p class="text-sm text-gray-600"><strong>Date of Birth:</strong> Jan 1, 2000</p>
-                    <p class="text-sm text-gray-600"><strong>Address:</strong> 123 Main St, City, Country</p>
+                    <!-- Display student phone, date of birth, and address -->
+                    <p class="text-sm text-gray-600"><strong>Phone:</strong>
+                        <%= student.phone %>
+                    </p>
+                    <p class="text-sm text-gray-600"><strong>Date of Birth:</strong>
+                        <%= student.formattedDateOfBirth %>
+                    </p>
+                    <p class="text-sm text-gray-600"><strong>Address:</strong>
+                        <%= student.address %>
+                    </p>
                 </div>
                 <div class="mt-4">
                     <a href="/edit-profile"
@@ -54,77 +59,96 @@
             <div class="bg-white shadow-lg rounded-lg p-6">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">Notifications</h2>
                 <ul class="space-y-3">
-                    <li class="flex items-center">
-                        <i class="ri-notification-2-line text-green-600 mr-3"></i>
-                        <p class="text-sm text-gray-700">New lesson added for "Math 101".</p>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="ri-calendar-event-line text-green-600 mr-3"></i>
-                        <p class="text-sm text-gray-700">Upcoming exam on Friday at 10 AM.</p>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="ri-mail-line text-green-600 mr-3"></i>
-                        <p class="text-sm text-gray-700">Message from your teacher: "Assignment reminder."</p>
-                    </li>
+                    <!-- Loop through notifications dynamically -->
+                    <% if (student.notifications && student.notifications.length> 0) { %>
+                        <% student.notifications.forEach(function(notification) { %>
+                            <li class="flex items-center">
+                                <i class="ri-notification-2-line text-green-600 mr-3"></i>
+                                <p class="text-sm text-gray-700">
+                                    <%= notification.message %>
+                                </p>
+                            </li>
+                            <% }) %>
+                                <% } else { %>
+                                    <li class="text-sm text-gray-500">No notifications available.</li>
+                                    <% } %>
                 </ul>
-                <div class="mt-4">
-                    <a href="/notifications" class="text-green-600 text-sm hover:underline">View all notifications</a>
-                </div>
+                <!-- Conditionally render the "View all notifications" link -->
+                <% if (student.notifications && student.notifications.length> 0) { %>
+                    <div class="mt-4">
+                        <a href="/notifications" class="text-green-600 text-sm hover:underline">View all
+                            notifications</a>
+                    </div>
+                    <% } %>
             </div>
 
-            <!-- Courses Section -->
+
+
+            <!-- Your Courses Section -->
             <div class="bg-white shadow-lg rounded-lg p-6">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">Your Courses</h2>
                 <ul class="space-y-3">
-                    <li class="flex items-center">
-                        <i class="ri-book-line text-green-600 mr-3"></i>
-                        <p class="text-sm text-gray-700">Math 101</p>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="ri-book-line text-green-600 mr-3"></i>
-                        <p class="text-sm text-gray-700">Science 202</p>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="ri-book-line text-green-600 mr-3"></i>
-                        <p class="text-sm text-gray-700">History 303</p>
-                    </li>
+                    <!-- Loop through courses dynamically -->
+                    <% if (student.courses && student.courses.length> 0) { %>
+                        <% student.courses.forEach(function(course) { %>
+                            <li class="flex items-center">
+                                <i class="ri-book-line text-green-600 mr-3"></i>
+                                <p class="text-sm text-gray-700">
+                                    <%= course.name %>
+                                </p>
+                            </li>
+                            <% }) %>
+                                <% } else { %>
+                                    <li class="text-sm text-gray-500">No courses enrolled yet.</li>
+                                    <% } %>
                 </ul>
-                <div class="mt-4">
-                    <a href="/courses" class="text-green-600 text-sm hover:underline">View all courses</a>
-                </div>
+                <!-- Conditionally render the "View all courses" link -->
+                <% if (student.courses && student.courses.length> 0) { %>
+                    <div class="mt-4">
+                        <a href="/courses" class="text-green-600 text-sm hover:underline">View all courses</a>
+                    </div>
+                    <% } %>
             </div>
-        </section>
 
-        <!-- Schedule Section -->
-        <section class="bg-white shadow-lg rounded-lg p-6 mt-8">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Upcoming Schedule</h2>
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-4 py-2 text-sm font-medium text-gray-600">Date</th>
-                        <th class="px-4 py-2 text-sm font-medium text-gray-600">Time</th>
-                        <th class="px-4 py-2 text-sm font-medium text-gray-600">Event</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="px-4 py-2 text-sm text-gray-700">Monday</td>
-                        <td class="px-4 py-2 text-sm text-gray-700">9:00 AM</td>
-                        <td class="px-4 py-2 text-sm text-gray-700">Math Class</td>
-                    </tr>
-                    <tr class="bg-gray-50">
-                        <td class="px-4 py-2 text-sm text-gray-700">Tuesday</td>
-                        <td class="px-4 py-2 text-sm text-gray-700">11:00 AM</td>
-                        <td class="px-4 py-2 text-sm text-gray-700">Science Lab</td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-2 text-sm text-gray-700">Friday</td>
-                        <td class="px-4 py-2 text-sm text-gray-700">10:00 AM</td>
-                        <td class="px-4 py-2 text-sm text-gray-700">Exam</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+
+
+            <!-- Schedule Section -->
+            <section class="bg-white shadow-lg rounded-lg p-6 mt-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Upcoming Schedule</h2>
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-2 text-sm font-medium text-gray-600">Date</th>
+                            <th class="px-4 py-2 text-sm font-medium text-gray-600">Time</th>
+                            <th class="px-4 py-2 text-sm font-medium text-gray-600">Event</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Display upcoming schedule -->
+                        <% if (student.schedule && student.schedule.length> 0) { %>
+                            <% student.schedule.forEach(function(event) { %>
+                                <tr>
+                                    <td class="px-4 py-2 text-sm text-gray-700">
+                                        <%= event.date %>
+                                    </td>
+                                    <td class="px-4 py-2 text-sm text-gray-700">
+                                        <%= event.time %>
+                                    </td>
+                                    <td class="px-4 py-2 text-sm text-gray-700">
+                                        <%= event.event %>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="3" class="px-4 py-2 text-sm text-gray-700">No upcoming events
+                                            </td>
+                                        </tr>
+                                        <% } %>
+
+                    </tbody>
+                </table>
+            </section>
 
     </div>
 </body>

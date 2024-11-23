@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
+// Define the Course schema
 const courseSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -11,20 +12,30 @@ const courseSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  duration: {
+  instructor: {
     type: String,
     required: true,
+    trim: true,
   },
-  students: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Student',
-  }],
+  schedule: [
+    {
+      day: {
+        type: String,
+        required: true,
+      },
+      time: {
+        type: String,
+        required: true,
+      },
+    },
+  ], // Array to store the schedule (e.g., "Monday, 10:00 AM")
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-const Course = mongoose.model('Course', courseSchema);
+// Create the Course model
+const Course = mongoose.model("Course", courseSchema);
 
 module.exports = Course;

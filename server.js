@@ -146,9 +146,13 @@ app.post("/add-student", upload.single("photo"), async (req, res) => {
     });
   }
 
+  // Generate a random Student ID (e.g., "S123456")
+  const studentID = 'S' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+
   // Create a new student document
   try {
     const student = new Student({
+      studentID,         // Assign the randomly generated student ID
       firstName,
       lastName,
       email,
@@ -165,7 +169,7 @@ app.post("/add-student", upload.single("photo"), async (req, res) => {
     // Render the form with a success message
     res.render("add-student", {
       error: null,
-      success: "Student added successfully!",
+      success: `Student added successfully! Student ID: ${studentID}`, // Display the Student ID
     });
   } catch (err) {
     console.error(err);
@@ -175,6 +179,7 @@ app.post("/add-student", upload.single("photo"), async (req, res) => {
     });
   }
 });
+
 
 // Delete Student
 app.post("/delete-student/:id", async (req, res) => {
@@ -395,15 +400,67 @@ app.get("/logout", (req, res) => {
 //============= student-dashboard ================================
 app.get("/student-dashboard", async (req, res) => {
   try {
-    const students = await Student.find(); // Fetch students from MongoDB
-    res.render("student-dashboard", { students }); // Make sure there is no extra space in 'student-dashboard'
-  } catch (error) {
-    console.error("Error fetching student data:", error);
-    res.status(500).send("Internal Server Error");
+    const student = await Student.findOne(); // Fetch a single student (for example, the logged-in user)
+    res.render("student-dashboard", { student }); // Pass the student object to the template
+  } catch (err) {
+    console.error("Error fetching student:", err);
+    res.status(500).send("Server Error");
   }
 });
 //==================Edit-profile==============================================
+// Route to render the Edit Profile page
+app.get('/edit-profile', async (req, res) => {
+  try {
+    if (!req.session.studentId) {
+      return res.redirect('/login'); // Redirect to login if no session
+    }
+    const student = await Student.findById(req.session.studentId);
+    res.render('edit-profile', { student });
+  } catch (err) {
+    res.status(500).send("Error retrieving student profile.");
+  }
+});
 
+// Route to handle the form submission
+app.post('/update-profile', upload.single('photo'), async (req, res) => {
+  try {
+    if (!req.session.studentId) {
+      return res.redirect('/login'); // Redirect to login if no session
+    }
+    const student = await Student.findById(req.session.studentId);
+
+    // Update student fields
+    student.firstName = req.body.firstName;
+    student.lastName = req.body.lastName;
+    student.phone = req.body.phone;
+    student.dateOfBirth = req.body.dateOfBirth;
+    student.address = req.body.address;
+
+    // If a new profile photo is uploaded, update the photo field
+    if (req.file) {
+      student.photo = '/public/images/' + req.file.filename;
+    }
+
+    await student.save();
+
+    res.redirect('/profile'); // Redirect to profile page after update
+  } catch (err) {
+    res.status(500).send("Error updating profile.");
+  }
+});
+
+// Route to render the Profile page (view profile)
+app.get('/profile', async (req, res) => {
+  try {
+    if (!req.session.studentId) {
+      return res.redirect('/login'); // Redirect to login if no session
+    }
+    const student = await Student.findById(req.session.studentId);
+    res.render('profile', { student });
+  } catch (err) {
+    res.status(500).send("Error retrieving student profile.");
+  }
+});
 // ==============Start Server===========================
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)
