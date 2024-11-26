@@ -1,14 +1,25 @@
 //============ open the notification =================================================================
-function openNotificationDetails(details) {
-        // Show the modal with the notification details
-        document.getElementById('notificationDetails').innerText = details;
-        document.getElementById('notificationModal').classList.remove('hidden');
-    }
+  // Function to show the notification modal with details
+  function showNotificationDetails(title, message, date) {
+    const modal = document.getElementById('notificationModal');
+    const notificationDetails = document.getElementById('notificationDetails');
 
-    function closeNotificationDetails() {
-        // Close the modal
-        document.getElementById('notificationModal').classList.add('hidden');
-    }
+    // Format the notification details
+    notificationDetails.innerHTML = `
+        <strong>${title}</strong><br>
+        <p>${message}</p>
+        <span class="text-xs text-gray-500">${new Date(date).toLocaleString()}</span>
+    `;
+
+    // Display the modal
+    modal.classList.remove('hidden');
+}
+
+// Function to close the notification modal
+function closeNotificationDetails() {
+    const modal = document.getElementById('notificationModal');
+    modal.classList.add('hidden');
+}
  //===================Open profile picture modal===================
  function openProfilePicture(imageSrc) {
     const modal = document.getElementById('profileModal');

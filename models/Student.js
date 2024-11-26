@@ -1,11 +1,22 @@
 const mongoose = require("mongoose");
-const moment = require("moment"); // We use Moment.js to format the date
+const bcrypt = require("bcryptjs");
+const moment = require("moment"); // Moment.js for date formatting
 
 // Define the Notification schema
 const notificationSchema = new mongoose.Schema({
-  message: {
+  title: {
     type: String,
     required: true,
+    maxlength: 100, // Max length for the title
+  },
+  message: {
+    type: String,
+    required: true, // The content of the notification
+  },
+  type: {
+    type: String,
+    enum: ["success", "error", "info", "warning"],
+    default: "info", // Default type is 'info'
   },
   date: {
     type: Date,
@@ -24,15 +35,15 @@ const studentSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  group: { 
+  group: {
     type: String,
-    enum: ['ADI3', 'ADI4', 'ASI3', 'ASI4', 'ASI13', 'ASI14', 'ASI23', 'ASI24'],
+    enum: ["ADI3", "ADI4", "ASI3", "ASI4", "ASI13", "ASI14", "ASI23", "ASI24"],
     required: true,
-},
+  },
   password: {
     type: String,
     required: true,
-    // Ideally, password should be hashed for security
+    minlength: 6, // Enforce minimum password length
   },
   firstName: {
     type: String,
@@ -57,9 +68,9 @@ const studentSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: function (v) {
-        return /^[0-9]{9}$/.test(v); // Validate for 9 digits
+        return /^(0|\+855)[0-9]{8,9}$/.test(v); // Validates Cambodian phone numbers
       },
-      message: "Phone number must contain exactly 9 digits.",
+      message: "Phone number must contain exactly 9 digits or start with +855.",
     },
   },
   address: {
@@ -89,30 +100,32 @@ const studentSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Course", // Reference to the Course model
     },
-  ], // Array to store references to courses
+  ],
   notifications: [notificationSchema], // Embedded notifications
 });
 
 // Virtual for student's age
 studentSchema.virtual("age").get(function () {
-  const today = new Date();
-  const birthDate = new Date(this.dateOfBirth);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const month = today.getMonth();
-  const day = today.getDate();
-  if (
-    month < birthDate.getMonth() ||
-    (month === birthDate.getMonth() && day < birthDate.getDate())
-  ) {
-    age--;
-  }
-  return age;
+  return moment().diff(moment(this.dateOfBirth), "years"); // Using Moment.js for age calculation
 });
 
 // Virtual for formatted dateOfBirth
 studentSchema.virtual("formattedDateOfBirth").get(function () {
-  return moment(this.dateOfBirth).format("D MMMM, YYYY"); // Format like "November 23, 2024"
+  return moment(this.dateOfBirth).format("D MMMM, YYYY"); // Format like "23 November, 2024"
 });
+
+// Pre-save hook to hash the password before saving
+studentSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    this.password = await bcrypt.hash(this.password, 10); // Hashing the password
+  }
+  next();
+});
+
+// Method to compare passwords
+studentSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password); // Compare provided password with the hashed one
+};
 
 // Create the Student model
 const Student = mongoose.model("Student", studentSchema);

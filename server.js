@@ -408,7 +408,7 @@ app.get("/logout", (req, res) => {
 //============= student-dashboard ================================
 app.get("/student-dashboard", async (req, res) => {
   try {
-    // Check if session contains studentID
+    // Ensure session contains studentID
     if (!req.session.studentID) {
       return res.status(400).send("Student ID is required in session.");
     }
@@ -420,29 +420,25 @@ app.get("/student-dashboard", async (req, res) => {
       return res.status(404).send("Student not found");
     }
 
-    // Check and format notifications with date handling
-    if (student.notifications && student.notifications.length > 0) {
-      student.notifications = student.notifications.map((notification) => {
-        // Safely format the date if it exists
-        const formattedDate = notification.date
-          ? new Date(notification.date).toLocaleDateString() // Adjust as needed
-          : "Date not available"; // Fallback if no date
+    // Process notifications and format dates
+    const notifications = student.notifications.map((notification) => {
+      const formattedDate = notification.date
+        ? new Date(notification.date).toLocaleDateString()  // Adjust the date format as required
+        : "Date not available";  // Fallback if no date provided
 
-        return {
-          ...notification,
-          formattedDate: formattedDate,
-        };
-      });
-    }
+      return {
+        ...notification,
+        formattedDate, // Append formatted date
+      };
+    });
 
-    // Render student dashboard with notifications
-    res.render("student-dashboard", { student });
+    // Render the student dashboard with notifications
+    res.render("student-dashboard", { student, notifications });
   } catch (err) {
     console.error("Error fetching student:", err);
     res.status(500).send("Server Error");
   }
 });
-
 //==================Edit-profile==============================================
 app.get('/edit-profile', async (req, res) => {
   try {
@@ -517,54 +513,67 @@ app.post('/login', async (req, res) => {
   }
 });
 //================ send-notification ===========================================
+// Render form to send notification
+// GET route to render the send notification page
 app.get('/send-notification', (req, res) => {
-  res.render('send-notification', { error: null, success: null });
+  res.render('send-notification', {
+    error: null,    // Default: no error
+    success: null,  // Default: no success message
+  });
 });
 
-// Route to handle the form submission and save the notification
+// POST route to handle form submission and save notifications
 app.post('/send-notification', async (req, res) => {
-  const { title, message, recipients } = req.body;
+  const { title, message, recipients, type } = req.body;
 
   if (!title || !message || !recipients) {
     return res.render('send-notification', {
-      error: 'All fields are required!',
-      success: null,
+      error: 'Title, message, and recipients are required.',
+      success: null
     });
   }
 
   try {
-    let studentList;
-    let recipientType = recipients; // Get the recipient type (group or all)
+    let studentsToNotify = [];
 
-    // Fetch students based on recipient type
-    if (recipients === 'all') {
-      studentList = await Student.find(); // Send to all students
+    if (recipients === "all") {
+      studentsToNotify = await Student.find({});
     } else {
-      // Fetch students based on group (e.g., 'ADI3', 'ASI4')
-      studentList = await Student.find({ group: recipients });
+      studentsToNotify = await Student.find({ group: recipients });
     }
 
-    // Send notification to selected students and save to DB
-    studentList.forEach(async (student) => {
-      const notification = new Notification({
-        title,
-        message,
-        recipients: [recipients], // Store the selected group(s) as recipients
-        studentId: student._id, // Store the studentId of the recipient
+    if (studentsToNotify.length === 0) {
+      return res.render('send-notification', {
+        error: 'No students found in the selected group.',
+        success: null
       });
+    }
 
-      await notification.save(); // Save the notification in the database
+    const newNotification = new Notification({
+      title,
+      message,
+      recipients: studentsToNotify.map(student => student.studentID),
+      type: type || 'info', // Default to 'info' if no type provided
     });
+
+    await newNotification.save();
+
+    // Optionally, add notification to each student
+    await Student.updateMany(
+      { studentID: { $in: studentsToNotify.map(student => student.studentID) } },
+      { $push: { notifications: newNotification._id } }
+    );
 
     res.render('send-notification', {
-      error: null,
-      success: 'Notification sent successfully!',
+      success: 'Notification sent successfully.',
+      error: null
     });
+
   } catch (err) {
     console.error('Error sending notification:', err);
     res.render('send-notification', {
-      error: 'There was an error sending the notification. Please try again.',
-      success: null,
+      error: 'Something went wrong. Please try again.',
+      success: null
     });
   }
 });

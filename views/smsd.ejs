@@ -20,20 +20,26 @@
 </head>
 
 <body class="bg-gray-100 font-sans">
+
     <!-- Main Container -->
     <div class="flex h-screen">
+
         <!-- Sidebar -->
-        <aside class="w-1/5 bg-blue-800 text-white flex flex-col">
+        <aside class="w-1/5 bg-blue-800 text-white flex flex-col space-y-6">
             <div class="px-6 py-4">
                 <h1 class="text-2xl font-bold">School Dashboard</h1>
+                <div class="mt-4">
+                    <img class="w-12 h-12 rounded-full" src="https://via.placeholder.com/150" alt="Profile">
+                    <p class="mt-2 font-medium">Admin</p>
+                </div>
             </div>
             <nav class="mt-6 flex-1">
                 <ul class="space-y-2">
-                    <li><a href="#" class="block px-6 py-2 hover:bg-blue-700">Dashboard</a></li>
-                    <li><a href="#" class="block px-6 py-2 hover:bg-blue-700">Students</a></li>
-                    <li><a href="#" class="block px-6 py-2 hover:bg-blue-700">Teachers</a></li>
-                    <li><a href="#" class="block px-6 py-2 hover:bg-blue-700">Classes</a></li>
-                    <li><a href="#" class="block px-6 py-2 hover:bg-blue-700">Exams</a></li>
+                    <li><a href="#" class="block px-6 py-2 hover:bg-blue-700 rounded-md">Dashboard</a></li>
+                    <li><a href="#" class="block px-6 py-2 hover:bg-blue-700 rounded-md">Students</a></li>
+                    <li><a href="#" class="block px-6 py-2 hover:bg-blue-700 rounded-md">Teachers</a></li>
+                    <li><a href="#" class="block px-6 py-2 hover:bg-blue-700 rounded-md">Classes</a></li>
+                    <li><a href="#" class="block px-6 py-2 hover:bg-blue-700 rounded-md">Exams</a></li>
                 </ul>
             </nav>
             <div class="px-6 py-4">
@@ -43,6 +49,7 @@
 
         <!-- Main Content -->
         <main class="flex-1 p-6">
+
             <!-- Header -->
             <header class="mb-6 flex justify-between items-center">
                 <h2 class="text-2xl font-semibold">Dashboard Overview</h2>
@@ -61,79 +68,78 @@
 
                     <% actions.forEach(action=> { %>
                         <a href="<%= action.link %>"
-                            class="bg-white p-4 rounded-lg shadow hover:bg-blue-100 cursor-pointer flex flex-col items-center">
+                            class="bg-white p-4 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer flex flex-col items-center">
                             <i class="<%= action.icon %> text-3xl <%= action.color %>"></i>
-                            <h4 class="mt-2 font-medium text-center">
+                            <h4 class="mt-2 font-medium text-center text-gray-800">
                                 <%= action.name %>
                             </h4>
                         </a>
-                        <% }) %>
+                    <% }) %>
             </section>
 
-
-
             <!-- Metrics Section -->
-            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <!-- Card 1 -->
-                <div class="bg-white p-6 rounded-lg shadow">
+                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-all">
                     <h3 class="text-lg font-medium">Total Students</h3>
                     <p class="mt-2 text-3xl font-bold text-blue-600">
                         <%= students.length %>
                     </p>
                 </div>
                 <!-- Card 2 -->
-                <div class="bg-white p-6 rounded-lg shadow">
+                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-all">
                     <h3 class="text-lg font-medium">Teachers</h3>
                     <p class="mt-2 text-3xl font-bold text-blue-600">80</p>
                 </div>
                 <!-- Card 3 -->
-                <div class="bg-white p-6 rounded-lg shadow">
+                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-all">
                     <h3 class="text-lg font-medium">Classes</h3>
                     <p class="mt-2 text-3xl font-bold text-blue-600">25</p>
                 </div>
                 <!-- Card 4 -->
-                <div class="bg-white p-6 rounded-lg shadow">
+                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-all">
                     <h3 class="text-lg font-medium">Exams Scheduled</h3>
                     <p class="mt-2 text-3xl font-bold text-blue-600">10</p>
                 </div>
             </section>
 
+            <!-- Recent Activity Section -->
             <section class="mt-8">
-                <h3 class="text-xl font-semibold mb-4">Recent Students</h3>
-                <div class="bg-white rounded-lg shadow overflow-x-auto">
-                    <table class="min-w-full table-auto">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="px-6 py-2 text-left text-sm font-medium text-gray-700">Name</th>
-                                <th class="px-6 py-2 text-left text-sm font-medium text-gray-700">Phone</th>
-                                <th class="px-6 py-2 text-left text-sm font-medium text-gray-700">Date of Birth</th>
-                                <th class="px-6 py-2 text-left text-sm font-medium text-gray-700">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% students.forEach(student=> { %>
-                                <tr class="border-b">
-                                    <td class="px-6 py-2">
-                                        <%= student.firstName %>
-                                            <%= student.lastName %>
-                                    </td>
-                                    <td class="px-6 py-2">
-                                        <%= student.phone %>
-                                    </td>
-                                    <td class="px-6 py-2">
-                                        <%= new Date(student.dateOfBirth).toLocaleDateString() %>
-                                    </td>
-                                    <td class="px-6 py-2">
-                                        <form action="/delete-student/<%= student._id %>" method="POST"
-                                            style="display: inline;">
-                                            <button
-                                                class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <% }) %>
-                        </tbody>
-                    </table>
+                <h3 class="text-xl font-semibold mb-4">Recent Activity</h3>
+
+                <div class="bg-white shadow-lg rounded-lg p-6 h-72 overflow-y-auto">
+                    <ul class="space-y-4">
+                        <!-- Activity Item -->
+                        <li class="flex items-center space-x-4 p-3 rounded-lg shadow-sm bg-gray-50">
+                            <div class="flex-shrink-0">
+                                <i class="ri-check-line text-blue-500 text-2xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-gray-800">Completed assignment: "Mathematics Homework"</p>
+                                <span class="text-xs text-gray-500">Just now</span>
+                            </div>
+                        </li>
+                        <!-- Activity Item -->
+                        <li class="flex items-center space-x-4 p-3 rounded-lg shadow-sm bg-gray-50">
+                            <div class="flex-shrink-0">
+                                <i class="ri-upload-2-line text-green-500 text-2xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-gray-800">Uploaded the project report: "Physics Lab Report"</p>
+                                <span class="text-xs text-gray-500">10 minutes ago</span>
+                            </div>
+                        </li>
+                        <!-- Activity Item -->
+                        <li class="flex items-center space-x-4 p-3 rounded-lg shadow-sm bg-gray-50">
+                            <div class="flex-shrink-0">
+                                <i class="ri-message-2-line text-yellow-500 text-2xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-gray-800">Received feedback on "English Essay"</p>
+                                <span class="text-xs text-gray-500">30 minutes ago</span>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </section>
 

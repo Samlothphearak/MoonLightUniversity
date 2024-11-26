@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
+    <link rel="stylesheet" href="/css/student-dasbord.css">
     <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <!-- REMIX-ICON -->
@@ -69,7 +70,8 @@
                 <div class="bg-white p-6 rounded-lg max-w-lg w-full">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Profile Picture</h3>
                     <!-- Display large profile picture -->
-                    <img id="modalProfilePicture" src="<%= student.photo %>" alt="Profile Picture" class="w-full h-auto rounded-lg">
+                    <img id="modalProfilePicture" src="<%= student.photo %>" alt="Profile Picture"
+                        class="w-full h-auto rounded-lg">
                     <div class="mt-4">
                         <button onclick="closeProfileModal()"
                             class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300">
@@ -79,42 +81,49 @@
                 </div>
             </div>
 
-           <!-- Notifications Section -->
-<div class="bg-white shadow-lg rounded-lg p-6">
-    <h2 class="text-xl font-semibold text-gray-800 mb-4">Notifications</h2>
-    <ul class="space-y-3">
-        <!-- Sample Notification 1 -->
-        <li class="flex items-center p-3 bg-green-50 border-l-4 border-green-500 rounded-lg shadow-sm hover:bg-green-100 transition-all duration-300 cursor-pointer"
-            onclick="openNotificationDetails('Notification 1 details here')">
-            <i class="ri-notification-2-line text-green-600 text-xl mr-3"></i>
-            <div>
-                <p class="text-xs text-gray-800 font-semibold">Your profile has been updated successfully.</p>
-                <span class="text-xs text-gray-500"> - 11/23/2024</span>
-            </div>
-        </li>
+            <!-- Notifications Section -->
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Notifications</h2>
 
-        <!-- Sample Notification 2 -->
-        <li class="flex items-center p-3 bg-blue-50 border-l-4 border-blue-500 rounded-lg shadow-sm hover:bg-blue-100 transition-all duration-300 cursor-pointer"
-            onclick="openNotificationDetails('New course materials available for your current module.')">
-            <i class="ri-notification-2-line text-blue-600 text-xl mr-3"></i>
-            <div>
-                <p class="text-xs text-gray-800 font-semibold">New course materials are available for your current module.</p>
-                <span class="text-xs text-gray-500"> - 11/22/2024</span>
-            </div>
-        </li>
+                <% if (student.notifications && student.notifications.length> 0) { %>
+                    <ul class="space-y-3">
+                        <% // Limit to the first 3 notifications const
+                            limitedNotifications=student.notifications.slice(0, 3);
+                            limitedNotifications.forEach(notification=> {
+                            %>
+                            <li class="flex items-center p-3 
+                    <%= notification.type === 'success' ? 'bg-green-50 border-l-4 border-green-500 hover:bg-green-100' : '' %>
+                    <%= notification.type === 'info' ? 'bg-blue-50 border-l-4 border-blue-500 hover:bg-blue-100' : '' %>
+                    <%= notification.type === 'warning' ? 'bg-yellow-50 border-l-4 border-yellow-500 hover:bg-yellow-100' : '' %>
+                    rounded-lg shadow-sm transition-all duration-300 cursor-pointer"
+                                onclick="showNotificationDetails('<%= notification.title %>', '<%= notification.message %>', '<%= notification.date %>')">
+                                <i class="ri-notification-2-line 
+                        <%= notification.type === 'success' ? 'text-green-600' : '' %>
+                        <%= notification.type === 'info' ? 'text-blue-600' : '' %>
+                        <%= notification.type === 'warning' ? 'text-yellow-600' : '' %>
+                        text-xl mr-3"></i>
 
-        <!-- Sample Notification 3 -->
-        <li class="flex items-center p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded-lg shadow-sm hover:bg-yellow-100 transition-all duration-300 cursor-pointer"
-            onclick="openNotificationDetails('Your attendance for the last month is now available.')">
-            <i class="ri-notification-2-line text-yellow-600 text-xl mr-3"></i>
-            <div>
-                <p class="text-xs text-gray-800 font-semibold">Your attendance for the last month is now available.</p>
-                <span class="text-xs text-gray-500"> - 11/21/2024</span>
-            </div>
-        </li>
-    </ul>
-</div>
+                                <div>
+                                    <p class="text-xs text-gray-800 font-semibold">
+                                        <%= notification.title %> - <%= notification.message %>
+                                    </p>
+                                    <span class="text-xs text-gray-500"> - <%= new
+                                            Date(notification.date).toLocaleDateString() %></span>
+                                </div>
+                            </li>
+                            <% }); %>
+                    </ul>
 
+                    <% if (student.notifications.length> 3) { %>
+                        <div class="mt-4 text-center">
+                            <a href="/notifications" class="text-blue-600 hover:underline">View All</a>
+                        </div>
+                        <% } %>
+
+                            <% } else { %>
+                                <p class="text-gray-500">No notifications available at the moment.</p>
+                                <% } %>
+            </div>
 
             <!-- Modal for Displaying Notification Details -->
             <div id="notificationModal"

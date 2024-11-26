@@ -57,12 +57,49 @@
             <!-- Recent Activity Section -->
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-2xl font-semibold text-gray-800 mb-4">Recent Activity</h2>
-                <ul>
-                    <li class="border-b py-2">New article added by John Doe - 2 mins ago</li>
-                    <li class="border-b py-2">Article "New Campus Updates" approved by Admin - 1 hour ago</li>
-                    <li class="border-b py-2">Article "Sports News" expired - 3 hours ago</li>
+                <ul class="divide-y divide-gray-200">
+                    <li class="py-3 flex items-center">
+                        <span class="bg-blue-100 text-blue-600 rounded-full p-2 mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4m0 4h.01M8.5 6.5a6.5 6.5 0 119 9l-5.5 5.5L8.5 6.5z" />
+                            </svg>
+                        </span>
+                        <div>
+                            <p class="text-gray-700">New article added by <strong>John Doe</strong></p>
+                            <span class="text-sm text-gray-500">2 mins ago</span>
+                        </div>
+                    </li>
+                    <li class="py-3 flex items-center">
+                        <span class="bg-green-100 text-green-600 rounded-full p-2 mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        <div>
+                            <p class="text-gray-700">Article <strong>"New Campus Updates"</strong> approved by Admin</p>
+                            <span class="text-sm text-gray-500">1 hour ago</span>
+                        </div>
+                    </li>
+                    <li class="py-3 flex items-center">
+                        <span class="bg-red-100 text-red-600 rounded-full p-2 mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-3-3v6m6 4H6a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2z" />
+                            </svg>
+                        </span>
+                        <div>
+                            <p class="text-gray-700">Article <strong>"Sports News"</strong> expired</p>
+                            <span class="text-sm text-gray-500">3 hours ago</span>
+                        </div>
+                    </li>
                 </ul>
             </div>
+
         </div>
     </div>
 
