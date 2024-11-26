@@ -474,7 +474,7 @@ app.post('/update-profile', upload.single('photo'), async (req, res) => {
 
     await student.save();
 
-    res.redirect('/profile'); // Redirect to profile page after update
+    res.redirect('/student-dashboard'); // Redirect to profile page after update
   } catch (err) {
     res.status(500).send("Error updating profile.");
   }

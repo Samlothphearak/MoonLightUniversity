@@ -82,63 +82,57 @@
             </div>
 
             <!-- Notifications Section -->
-            <div class="bg-white shadow-lg rounded-lg p-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Notifications</h2>
+<div class="bg-white shadow-lg rounded-lg p-6">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Notifications</h2>
 
-                <% if (student.notifications && student.notifications.length> 0) { %>
-                    <ul class="space-y-3">
-                        <% // Limit to the first 3 notifications const
-                            limitedNotifications=student.notifications.slice(0, 3);
-                            limitedNotifications.forEach(notification=> {
-                            %>
-                            <li class="flex items-center p-3 
-                    <%= notification.type === 'success' ? 'bg-green-50 border-l-4 border-green-500 hover:bg-green-100' : '' %>
-                    <%= notification.type === 'info' ? 'bg-blue-50 border-l-4 border-blue-500 hover:bg-blue-100' : '' %>
-                    <%= notification.type === 'warning' ? 'bg-yellow-50 border-l-4 border-yellow-500 hover:bg-yellow-100' : '' %>
-                    rounded-lg shadow-sm transition-all duration-300 cursor-pointer"
-                                onclick="showNotificationDetails('<%= notification.title %>', '<%= notification.message %>', '<%= notification.date %>')">
-                                <i class="ri-notification-2-line 
-                        <%= notification.type === 'success' ? 'text-green-600' : '' %>
-                        <%= notification.type === 'info' ? 'text-blue-600' : '' %>
-                        <%= notification.type === 'warning' ? 'text-yellow-600' : '' %>
-                        text-xl mr-3"></i>
+    <% if (student.notifications && student.notifications.length > 0) { %>
+        <ul class="space-y-3">
+            <% 
+                // Limit notifications to the first 3 for display
+                const limitedNotifications = student.notifications.slice(0, 3); 
+                limitedNotifications.forEach(notification => { 
+            %>
+            <li 
+                class="flex items-center p-3 bg-blue-50 border-l-4 border-blue-500 hover:bg-blue-100 rounded-lg shadow-sm transition-all duration-300 cursor-pointer"
+                onclick="showNotificationDetails('<%= notification.title || "No Title" %>', '<%= notification.message || "No message available." %>', '<%= new Date(notification.date).toLocaleString() %>')">
+                
+                <i class="ri-notification-2-line text-blue-600 text-xl mr-3"></i>
 
-                                <div>
-                                    <p class="text-xs text-gray-800 font-semibold">
-                                        <%= notification.title %> - <%= notification.message %>
-                                    </p>
-                                    <span class="text-xs text-gray-500"> - <%= new
-                                            Date(notification.date).toLocaleDateString() %></span>
-                                </div>
-                            </li>
-                            <% }); %>
-                    </ul>
-
-                    <% if (student.notifications.length> 3) { %>
-                        <div class="mt-4 text-center">
-                            <a href="/notifications" class="text-blue-600 hover:underline">View All</a>
-                        </div>
-                        <% } %>
-
-                            <% } else { %>
-                                <p class="text-gray-500">No notifications available at the moment.</p>
-                                <% } %>
-            </div>
-
-            <!-- Modal for Displaying Notification Details -->
-            <div id="notificationModal"
-                class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
-                <div class="bg-white p-6 rounded-lg max-w-sm w-full">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Notification Details</h3>
-                    <p id="notificationDetails" class="text-sm text-gray-700"></p>
-                    <div class="mt-4">
-                        <button onclick="closeNotificationDetails()"
-                            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300">
-                            Close
-                        </button>
-                    </div>
+                <div>
+                    <p class="text-sm text-gray-800 font-semibold">
+                        <%= notification.title || "No Title" %> - <%= notification.message || "No message available." %>
+                    </p>
+                    <span class="text-xs text-gray-500">
+                        <%= new Date(notification.date).toLocaleString() %>
+                    </span>
                 </div>
+            </li>
+            <% }); %>
+        </ul>
+
+        <% if (student.notifications.length > 3) { %>
+            <div class="mt-4 text-center">
+                <a href="/notifications" class="text-blue-600 hover:underline">View All</a>
             </div>
+        <% } %>
+    <% } else { %>
+        <p class="text-gray-500">No notifications available at the moment.</p>
+    <% } %>
+</div>
+
+<!-- Modal for Displaying Notification Details -->
+<div id="notificationModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-6 rounded-lg max-w-sm w-full">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Notification Details</h3>
+        <p id="notificationDetails" class="text-sm text-gray-700"></p>
+        <div class="mt-4">
+            <button onclick="closeNotificationDetails()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
 
             <!-- Your Courses Section -->
             <div class="bg-white shadow-lg rounded-lg p-6">
