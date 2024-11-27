@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const moment = require("moment"); // We use Moment.js to format the date
+const bcrypt = require("bcrypt");
+const moment = require("moment"); // For date formatting
 
 // Define the Notification schema
 const notificationSchema = new mongoose.Schema({
@@ -21,7 +22,6 @@ const notificationSchema = new mongoose.Schema({
   },
 });
 
-
 // Define the Student schema
 const studentSchema = new mongoose.Schema({
   studentID: {
@@ -29,15 +29,14 @@ const studentSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  group: { 
+  group: {
     type: String,
     enum: ['ADI3', 'ADI4', 'ASI3', 'ASI4', 'ASI13', 'ASI14', 'ASI23', 'ASI24'],
     required: true,
-},
+  },
   password: {
     type: String,
     required: true,
-    // Ideally, password should be hashed for security
   },
   firstName: {
     type: String,
@@ -92,7 +91,7 @@ const studentSchema = new mongoose.Schema({
   courses: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Course", // Reference to the Course model
+      ref: "/models/Course.js", // Reference to the Course model
     },
   ], // Array to store references to courses
   notifications: [notificationSchema], // Embedded notifications
@@ -118,6 +117,32 @@ studentSchema.virtual("age").get(function () {
 studentSchema.virtual("formattedDateOfBirth").get(function () {
   return moment(this.dateOfBirth).format("D MMMM, YYYY"); // Format like "November 23, 2024"
 });
+
+// Pre-save middleware to hash the password
+// studentSchema.pre("save", async function (next) {
+//   if (!this.isModified("password")) return next(); // Only hash if password is modified
+
+//   try {
+//     const salt = await bcrypt.genSalt(10); // Generate a salt
+//     this.password = await bcrypt.hash(this.password, salt); // Hash the password with the salt
+//     next(); // Proceed with saving
+//   } catch (err) {
+//     next(err); // Pass errors to the next middleware
+//   }
+// });
+
+
+// Add a welcome notification on new student creation
+studentSchema.pre("save", function (next) {
+  if (this.isNew) {
+    this.notifications.push({
+      title: "Welcome to the platform!",
+      message: `Hi ${this.firstName} ${this.lastName}, welcome to our learning management system.`,
+    });
+  }
+  next();
+});
+
 
 // Create the Student model
 const Student = mongoose.model("Student", studentSchema);

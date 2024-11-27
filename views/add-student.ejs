@@ -17,7 +17,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 </head>
 
-<body class="bg-gradient-to-r from-green-50 via-white to-green-100 font-sans min-h-screen flex items-center justify-center">
+<body
+    class="bg-gradient-to-r from-green-50 via-white to-green-100 font-sans min-h-screen flex items-center justify-center">
     <div class="container mx-auto px-4">
         <!-- Header -->
         <header class="text-center mb-8">
@@ -27,24 +28,24 @@
 
         <!-- Form Card -->
         <section class="bg-white shadow-lg rounded-xl p-8 max-w-4xl mx-auto">
-            <!-- Error Messages -->
-            <% if (error) { %>
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6" role="alert">
-                <strong class="font-bold">Error:</strong>
-                <span><%= error %></span>
+            <!-- Feedback Section -->
+            <div id="feedback" class="text-center my-4">
+                <% if (error) { %>
+                    <p class="text-red-600 font-semibold">
+                        <%= error %>
+                    </p>
+                    <% } %>
+                        <% if (success) { %>
+                            <p class="text-green-600 font-semibold">
+                                <%= success %>
+                            </p>
+                            <% } %>
             </div>
-            <% } %>
 
-            <!-- Success Messages -->
-            <% if (success) { %>
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6" role="alert">
-                <strong class="font-bold">Success:</strong>
-                <span><%= success %></span>
-            </div>
-            <% } %>
 
             <!-- Form -->
-            <form action="/add-student" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form action="/add-student" method="POST" enctype="multipart/form-data"
+                class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- First Name -->
                 <div>
                     <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
@@ -113,7 +114,8 @@
                 <div>
                     <label for="group" class="block text-sm font-medium text-gray-700">Group</label>
                     <select name="group" id="group"
-                        class="mt-2 p-3 w-full border rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500" required>
+                        class="mt-2 p-3 w-full border rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+                        required>
                         <option value="ADI3">ADI3</option>
                         <option value="ADI4">ADI4</option>
                         <option value="ASI3">ASI3</option>

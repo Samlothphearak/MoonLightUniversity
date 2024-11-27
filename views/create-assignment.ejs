@@ -1,11 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Create Assignment</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- REMIX ICON -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.css">
 </head>
-<body>
-    
+
+<body class="bg-gray-100">
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Create Assignment</h1>
+
+            <!-- Display Error -->
+            <% if (error) { %>
+            <div class="mb-4 bg-red-100 text-red-700 border border-red-400 rounded p-4">
+                <strong>Error:</strong> <%= error %>
+            </div>
+            <% } %>
+
+            <form action="/create-assignment" method="POST" enctype="multipart/form-data">
+                <!-- Assignment Title -->
+                <div class="mb-4">
+                    <label for="title" class="block text-sm font-medium text-gray-700">Assignment Title</label>
+                    <input type="text" id="title" name="title"
+                        class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Enter the assignment title" required>
+                </div>
+
+                <!-- Assignment Description -->
+                <div class="mb-4">
+                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="description" name="description" rows="4"
+                        class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Enter the assignment description"></textarea>
+                </div>
+
+                <!-- Due Date -->
+                <div class="mb-4">
+                    <label for="due_date" class="block text-sm font-medium text-gray-700">Due Date</label>
+                    <input type="date" id="due_date" name="due_date"
+                        class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                        required>
+                </div>
+
+                <!-- File Upload -->
+                <div class="mb-4">
+                    <label for="file" class="block text-sm font-medium text-gray-700">Attachment (Optional)</label>
+                    <input type="file" id="file" name="file"
+                        class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end">
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-300">
+                        <i class="ri-add-line"></i> Create Assignment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </body>
+
 </html>

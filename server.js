@@ -7,11 +7,12 @@ const Student = require("./models/Student");
 const Notification = require("./models/Notification"); // Adjust the path as needed
 const Course = require("./models/Course"); // Your course model
 const Schedule = require("./models/Schedule");
+const Assignment = require('./models/assignment');
 const multer = require("multer");
 const path = require("path");
 const session = require("express-session");
 const nodemailer = require("nodemailer");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 const app = express();
@@ -39,13 +40,12 @@ const fileFilter = (req, file, cb) => {
 };
 
 // Set up session middleware
-app.use(
-  session({
-    secret: "your-secret-key",
-    resave: false,
-    saveUninitialized: true,
-  })
-);
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }, // Set to true if using HTTPS
+}));
 
 // Set up multer middleware
 const upload = multer({
@@ -107,7 +107,7 @@ app.get("/add-student", (req, res) => {
 });
 
 // ==================Route to handle form submission (POST)==============================
-app.post('/add-student', upload.single('photo'), async (req, res) => {
+app.post("/add-student", upload.single("photo"), async (req, res) => {
   const {
     firstName,
     lastName,
@@ -117,12 +117,12 @@ app.post('/add-student', upload.single('photo'), async (req, res) => {
     dateOfBirth,
     placeOfBirth,
     password,
-    group, // Add the group to the destructuring
+    group,
   } = req.body;
 
-  const photo = req.file ? req.file.path : null;
+  const photo = req.file ? req.file.path : "/public/images/default-photo.jpg"; // Use default if no photo uploaded
 
-  // Validate form fields
+  // Validate required fields
   if (
     !firstName ||
     !lastName ||
@@ -131,33 +131,60 @@ app.post('/add-student', upload.single('photo'), async (req, res) => {
     !address ||
     !dateOfBirth ||
     !placeOfBirth ||
-    !photo ||
     !password ||
-    !group // Ensure the group is selected
+    !group
   ) {
-    return res.render('add-student', {
-      error: 'All fields are required!',
+    return res.render("add-student", {
+      error: "All fields are required!",
       success: null,
     });
   }
 
-  // Validate phone number (Cambodia: 9 digits)
+  // Validate phone number
   const phoneRegex = /^[0-9]{9}$/;
   if (!phoneRegex.test(phone)) {
-    return res.render('add-student', {
-      error: 'Phone number must be 9 digits.',
+    return res.render("add-student", {
+      error: "Phone number must be exactly 9 digits.",
+      success: null,
+    });
+  }
+
+  // Check for existing email
+  const existingStudent = await Student.findOne({ email });
+  if (existingStudent) {
+    return res.render("add-student", {
+      error: "A student with this email already exists.",
       success: null,
     });
   }
 
   // Hash the password
-  const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
+  } catch (err) {
+    console.error("Error hashing password:", err);
+    return res.render("add-student", {
+      error: "An error occurred while processing the password.",
+      success: null,
+    });
+  }
 
-  // Generate a random Student ID
-  const studentID = 'S' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+  // Generate a unique Student ID
+  let studentID;
+  while (true) {
+    studentID =
+      "S" +
+      Math.floor(Math.random() * 1000000)
+        .toString()
+        .padStart(6, "0");
+
+    const existingID = await Student.findOne({ studentID });
+    if (!existingID) break; // Ensure the ID is unique
+  }
 
   try {
-    // Create a new student document, including the group
+    // Create and save the student document
     const student = new Student({
       studentID,
       firstName,
@@ -168,27 +195,25 @@ app.post('/add-student', upload.single('photo'), async (req, res) => {
       photo,
       dateOfBirth,
       placeOfBirth,
-      password: hashedPassword, // Store hashed password
-      group, // Store the selected group
+      password: hashedPassword,
+      group,
     });
 
-    // Save the student document to the database
     await student.save();
 
-    // Render the form with a success message
-    res.render('add-student', {
+    // Render success message
+    res.render("add-student", {
       error: null,
       success: `Student added successfully! Student ID: ${studentID}`,
     });
   } catch (err) {
-    console.error(err);
-    res.render('add-student', {
-      error: 'Error adding student. Please try again.',
+    console.error("Error saving student to database:", err);
+    res.render("add-student", {
+      error: "Error adding student. Please try again.",
       success: null,
     });
   }
 });
-
 // ====================================Delete Student=====================
 app.post("/delete-student/:id", async (req, res) => {
   try {
@@ -423,8 +448,8 @@ app.get("/student-dashboard", async (req, res) => {
     // Process notifications and format dates
     const notifications = student.notifications.map((notification) => {
       const formattedDate = notification.date
-        ? new Date(notification.date).toLocaleDateString()  // Adjust the date format as required
-        : "Date not available";  // Fallback if no date provided
+        ? new Date(notification.date).toLocaleDateString() // Adjust the date format as required
+        : "Date not available"; // Fallback if no date provided
 
       return {
         ...notification,
@@ -440,23 +465,23 @@ app.get("/student-dashboard", async (req, res) => {
   }
 });
 //==================Edit-profile==============================================
-app.get('/edit-profile', async (req, res) => {
+app.get("/edit-profile", async (req, res) => {
   try {
     if (!req.session.studentId) {
-      return res.redirect('/login'); // Redirect to login if no session
+      return res.redirect("/login"); // Redirect to login if no session
     }
     const student = await Student.findById(req.session.studentId);
-    res.render('edit-profile', { student });
+    res.render("edit-profile", { student });
   } catch (err) {
     res.status(500).send("Error retrieving student profile.");
   }
 });
 
 // Route to handle the form submission
-app.post('/update-profile', upload.single('photo'), async (req, res) => {
+app.post("/update-profile", upload.single("photo"), async (req, res) => {
   try {
     if (!req.session.studentId) {
-      return res.redirect('/login'); // Redirect to login if no session
+      return res.redirect("/login"); // Redirect to login if no session
     }
     const student = await Student.findById(req.session.studentId);
 
@@ -469,67 +494,65 @@ app.post('/update-profile', upload.single('photo'), async (req, res) => {
 
     // If a new profile photo is uploaded, update the photo field
     if (req.file) {
-      student.photo = '/public/images/' + req.file.filename;
+      student.photo = "/public/images/" + req.file.filename;
     }
 
     await student.save();
 
-    res.redirect('/student-dashboard'); // Redirect to profile page after update
+    res.redirect("/student-dashboard"); // Redirect to profile page after update
   } catch (err) {
     res.status(500).send("Error updating profile.");
   }
 });
 //=============================================
 // Route to render the login page
-app.get('/login', (req, res) => {
-  res.render('login', { error: null }); // Render the login page with no error initially
+app.get("/login", (req, res) => {
+  res.render("login", { error: null }); // Render the login page with no error initially
 });
 
+// Route for login
 app.post('/login', async (req, res) => {
-  const { studentID, password } = req.body;
+  const { studentID, password } = req.body; // Extract student ID and password from request
 
-  // Find the student by Student ID
-  const student = await Student.findOne({ studentID });
+  try {
+    // Find student by student ID
+    const student = await Student.findOne({ studentID });
+    if (!student) {
+      return res.render('login', { error: 'Student ID not found' }); // Handle non-existent user
+    }
 
-  if (!student) {
-    return res.render('login', {
-      error: 'Student ID not found', // Pass the error message back to the login page
-    });
-  }
+    // Compare the entered password with the stored hashed password
+    const isMatch = await bcrypt.compare(password, student.password);
+    if (!isMatch) {
+      return res.render('login', { error: 'Invalid password' }); // Handle incorrect password
+    }
 
-  // Compare the password with the hashed password in the database
-  const isMatch = await bcrypt.compare(password, student.password);
-
-  if (isMatch) {
-    // Store the student's ID in the session
-    req.session.studentId = student._id;
-
-    // Pass student data to the dashboard page
-    res.render('student-dashboard', { student });
-  } else {
-    return res.render('login', {
-      error: 'Invalid password', // Pass the invalid password error back to the login page
-    });
+    // Successful login: Store session or send a success response
+    req.session.studentId = student._id; // Store student's ID in session
+    res.render('student-dashboard', { student }); // Redirect to dashboard or similar
+  } catch (err) {
+    console.error(err);
+    res.status(500).render('login', { error: 'An error occurred. Please try again later.' });
   }
 });
 //================ send-notification ===========================================
 // Render form to send notification
 // GET route to render the send notification page
-app.get('/send-notification', (req, res) => {
-  res.render('send-notification', {
-    error: null,    // Default: no error
-    success: null,  // Default: no success message
+app.get("/send-notification", (req, res) => {
+  res.render("send-notification", {
+    error: null, // Default: no error
+    success: null, // Default: no success message
   });
 });
 
 // POST route to handle form submission and save notifications
-app.post('/send-notification', async (req, res) => {
+app.post("/send-notification", async (req, res) => {
   const { title, message, recipients, type } = req.body;
 
   if (!title || !message || !recipients) {
-    return res.render('send-notification', {
-      error: 'Title, message, and recipients are required.',
-      success: null
+    return res.render("send-notification", {
+      error: "Title, message, and recipients are required.",
+      success: null,
     });
   }
 
@@ -543,41 +566,77 @@ app.post('/send-notification', async (req, res) => {
     }
 
     if (studentsToNotify.length === 0) {
-      return res.render('send-notification', {
-        error: 'No students found in the selected group.',
-        success: null
+      return res.render("send-notification", {
+        error: "No students found in the selected group.",
+        success: null,
       });
     }
 
     const newNotification = new Notification({
       title,
       message,
-      recipients: studentsToNotify.map(student => student.studentID),
-      type: type || 'info', // Default to 'info' if no type provided
+      recipients: studentsToNotify.map((student) => student.studentID),
+      type: type || "info", // Default to 'info' if no type provided
     });
 
     await newNotification.save();
 
     // Optionally, add notification to each student
     await Student.updateMany(
-      { studentID: { $in: studentsToNotify.map(student => student.studentID) } },
+      {
+        studentID: {
+          $in: studentsToNotify.map((student) => student.studentID),
+        },
+      },
       { $push: { notifications: newNotification._id } }
     );
 
-    res.render('send-notification', {
-      success: 'Notification sent successfully.',
-      error: null
+    res.render("send-notification", {
+      success: "Notification sent successfully.",
+      error: null,
     });
-
   } catch (err) {
-    console.error('Error sending notification:', err);
-    res.render('send-notification', {
-      error: 'Something went wrong. Please try again.',
-      success: null
+    console.error("Error sending notification:", err);
+    res.render("send-notification", {
+      error: "Something went wrong. Please try again.",
+      success: null,
     });
   }
 });
+//===============GET route to render the form====================
+app.get("/create-assignment", (req, res) => {
+  res.render("create-assignment", { error: null });
+});
 
+//=================POST route to handle form submission===================
+app.post("/create-assignment", async (req, res) => {
+  const { title, description, due_date } = req.body;
+
+  // Validate required fields
+  if (!title || !due_date) {
+    return res.render("create-assignment", {
+      error: "Title and Due Date are required.",
+    });
+  }
+
+  try {
+    // Create a new assignment document and save it to the database
+    const assignment = new Assignment({
+      title,
+      description,
+      due_date,
+    });
+    await assignment.save();
+
+    // Redirect to a success page or render success message
+    res.send("Assignment created successfully!");
+  } catch (err) {
+    console.error(err);
+    res.render("create-assignment", {
+      error: "An error occurred while saving the assignment. Please try again.",
+    });
+  }
+});
 // ==============Start Server===========================
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)
